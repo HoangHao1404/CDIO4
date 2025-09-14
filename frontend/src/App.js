@@ -12,8 +12,7 @@ import OverviewPage from "./pages/OverviewPage";
 
 function App() {
   return (
-    <div className="App">
-    </div>
+    <div className="App"></div>
     // <AuthProvider>
     //   <Router>
     //     <div className="App">
