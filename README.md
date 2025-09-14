@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # REMN Fullstack Project 🚀
 
 Dự án fullstack sử dụng **REMN** stack (ReactJS, Express, MongoDB, NodeJS) - Phù hợp cho sinh viên học tập.
@@ -11,7 +12,11 @@ Dự án fullstack sử dụng **REMN** stack (ReactJS, Express, MongoDB, NodeJS
 - **Database**: MongoDB (cơ sở dữ liệu NoSQL)
 - **Runtime**: Node.js (môi trường chạy JavaScript)
 
-## 🏗️ Cấu trúc thư mục
+## 🏗️ Cấu trúc thư mục<<<<<<< HEAD
+...nội dung của bạn...
+=======
+...nội dung từ remote...
+>>>>>>> main
 
 ```
 remn-fullstack-project/
@@ -152,3 +157,6 @@ Nếu có lỗi hoặc suggestion, tạo issue hoặc pull request!
 ## 📄 License
 
 MIT License - Tự do sử dụng cho mục đích học tập.
+=======
+# CDIO4
+>>>>>>> 8cfa577446e1a68874992ec0000fda227caca723
