@@ -8,16 +8,17 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 // Import styles
 import "./styles/App.css";
-import { Public_page } from "./pages/Public_page";
-import NavbarAirZen from "./components/common/Navbar";
+
+
+import OverviewPage from "./pages/OverviewPage";
+import Sidebar from "./components/common/Sidebar";
+
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Public_page />
-      </div>
-    </Router>
+    <div className="App">
+      <Sidebar/>
+    </div>
   );
 }
 

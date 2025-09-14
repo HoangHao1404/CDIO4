@@ -7,7 +7,7 @@ Dự án fullstack sử dụng **REMN** stack (ReactJS, Express, MongoDB, NodeJS
 
 Đây là template chuẩn cho dự án fullstack web application với:
 
-- **Frontend**: ReactJS (giao diện người dùng)
+- **Frontend**: ReactJS (giao diện người dùng), Tailwind CSS, shaduicn CSS
 - **Backend**: Express.js (API server)
 - **Database**: MongoDB (cơ sở dữ liệu NoSQL)
 - **Runtime**: Node.js (môi trường chạy JavaScript)
