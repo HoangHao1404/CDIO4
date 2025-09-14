@@ -9,6 +9,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 // Import styles
 import "./styles/App.css";
 import { Public_page } from "./pages/Public_page";
+import NavbarAirZen from "./components/common/Navbar";
 
 function App() {
   return (
