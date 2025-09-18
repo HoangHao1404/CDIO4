@@ -1,4 +1,12 @@
 import React from "react";
+import icdashboard from "../../image/ic_dashboard.png";
+
+// Update other image imports as well
+import icAirQuality from "../../image/ic_chisokk.png";
+import icThreshold from "../../image/ic_threshold.png";
+import icHistory from "../../image/ic_history.png";
+import icSettings from "../../image/ic_setting.png";
+import icLogout from "../../image/ic_logout.png";
 
 const Sidebar = () => {
   return (
@@ -21,9 +29,9 @@ const Sidebar = () => {
             {/* Dashboard */}
             <a href="#" className="flex items-center gap-2 h-6 relative z-10">
               <img
-                src="img/overview.png"
+                src={icdashboard}
                 alt="Overview"
-                className="icon-fix"
+                className="icon-fix brightness-0"
                 style={{ width: "18px", height: "18px" }}
                 onError={(e) => {
                   e.currentTarget.style.backgroundColor = "#666";
@@ -37,9 +45,9 @@ const Sidebar = () => {
             {/* Chỉ số không khí */}
             <a href="#" className="flex items-center gap-2 h-6">
               <img
-                src="img/Chisokk.png"
+                src={icAirQuality}
                 alt="Users"
-                className="icon-fix"
+                className="icon-fix brightness-0"
                 style={{ width: "18px", height: "18px" }}
                 onError={(e) => {
                   e.currentTarget.style.backgroundColor = "#666";
@@ -53,9 +61,9 @@ const Sidebar = () => {
             {/* Ngưỡng an toàn */}
             <a href="#" className="flex items-center gap-2 h-6">
               <img
-                src="img/NguongAnToan.png"
+                src={icThreshold}
                 alt="Support"
-                className="icon-fix"
+                className="icon-fix brightness-0"
                 style={{ width: "18px", height: "18px" }}
                 onError={(e) => {
                   e.currentTarget.style.backgroundColor = "#666";
@@ -69,9 +77,9 @@ const Sidebar = () => {
             {/* Lịch sử */}
             <a href="#" className="flex items-center gap-2 h-6">
               <img
-                src="img/LichSu.png"
+                src={icHistory}
                 alt="Notifications"
-                className="icon-fix"
+                className="icon-fix brightness-0"
                 style={{ width: "18px", height: "18px" }}
                 onError={(e) => {
                   e.currentTarget.style.backgroundColor = "#666";
@@ -85,9 +93,9 @@ const Sidebar = () => {
             {/* Cài đặt */}
             <a href="#" className="flex items-center gap-2 h-6">
               <img
-                src="img/CaiDat.png"
+                src={icSettings}
                 alt="Settings"
-                className="icon-fix"
+                className="icon-fix brightness-0"
                 style={{ width: "18px", height: "18px" }}
                 onError={(e) => {
                   e.currentTarget.style.backgroundColor = "#666";
@@ -101,7 +109,7 @@ const Sidebar = () => {
 
           {/* Logout */}
           <button className="absolute bottom-[27px] left-[63px] flex items-center gap-1">
-            <img src="img/Logout.png" alt="Logout" className="w-5 h-5" />
+            <img src={icLogout} alt="Logout" className="w-5 h-5 brightness-0" />
             <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696] ml-1">
               Log Out
             </span>
