@@ -245,7 +245,7 @@ export default function NavbarAirZen() {
   }, [darkMode]);
 
   return (
-    <header className="w-[70%] ml-[30%] sticky top-0 z-40">
+    <header className="w-full sticky top-0 z-40">
       <div className="mx-auto mt-2 rounded-3xl bg-white/90 dark:bg-zinc-800 shadow px-2 py-2">
         <div className="flex items-center justify-end gap-3">
           {/* Weather */}
