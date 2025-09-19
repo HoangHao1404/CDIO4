@@ -9,6 +9,7 @@ import "./styles/App.css";
 import Sidebar from "./components/common/Sidebar";
 import NavbarAirZen from "./components/common/Navbar";
 import { ThresholdePage } from "./pages/ThresholdePage";
+import { UserManagerment } from "./pages/UserManagerment";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <NavbarAirZen />
         </div>
         <main className="flex-1 overflow-x-hidden overflow-y-auto">
-          <ThresholdePage />
+          {/* <ThresholdePage /> */}
+          <UserManagerment/>
         </main>
       </div>
     </div>
