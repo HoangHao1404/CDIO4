@@ -9,15 +9,15 @@ import { BrowserRouter as Router } from "react-router-dom";
 // Import styles
 import "./styles/App.css";
 
-
-import OverviewPage from "./pages/OverviewPage";
+//import OverviewPage from "./pages/OverviewPage";
 import Sidebar from "./components/common/Sidebar";
-
+import CardData from "./components/common/CardData";
 
 function App() {
   return (
     <div className="App">
-      <Sidebar/>
+      <Sidebar />
+      {/* <CardData /> */}
     </div>
   );
 }
