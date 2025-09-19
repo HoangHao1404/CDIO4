@@ -7,8 +7,9 @@ import {
   Moon,
   Settings,
   User,
+  Sun,
 } from "lucide-react";
-
+import { useTheme } from "../../context/ThemeContext";
 // Mock auth
 const useAuth = () => ({
   user: {
@@ -195,6 +196,7 @@ const Avatar = ({ src, alt }) => (
 );
 
 export default function NavbarAirZen() {
+  const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const now = useNow();
   const { data: weather, loading: wLoading } = useWeather();
@@ -230,23 +232,15 @@ export default function NavbarAirZen() {
   const markAllRead = () =>
     setNoti((prev) => prev.map((n) => ({ ...n, unread: false })));
 
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === "dark"
-  );
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
-
   return (
-    <header className="w-[70%] ml-[30%] sticky top-0 z-40">
-      <div className="mx-auto mt-2 rounded-3xl bg-white/90 dark:bg-zinc-800 shadow px-2 py-2">
+    <header
+      className="fixed top-7 right-0 w-[calc(100%-250px)] z-40"
+      style={{ transition: "background-color 300ms ease, color 300ms ease" }}
+    >
+      <div
+        className="mx-auto mr-4 rounded-3xl bg-white/90 dark:bg-zinc-900 shadow px-2 py-2"
+        style={{ transition: "background-color 300ms ease, color 300ms ease" }}
+      >
         <div className="flex items-center justify-end gap-3">
           {/* Weather */}
           <div
@@ -342,11 +336,16 @@ export default function NavbarAirZen() {
                   </li>
                   <li>
                     <button
-                      onClick={() => setDarkMode((prev) => !prev)}
+                      onClick={toggleTheme}
                       className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
-                                 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm dark:text-zinc-200"
+             hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm dark:text-zinc-200"
                     >
-                      <Moon className="h-4 w-4" /> Chế độ tối/sáng
+                      {theme === "light" ? (
+                        <Moon className="h-4 w-4" />
+                      ) : (
+                        <Sun className="h-4 w-4" />
+                      )}
+                      {theme === "light" ? "Chế độ tối" : "Chế độ sáng"}
                     </button>
                   </li>
                   <li>
