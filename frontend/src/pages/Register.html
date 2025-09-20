@@ -14,16 +14,17 @@
         }
 
         body {
-            background-color: #ffffff; /* Nền trắng */
+            background-color: #ffffff; 
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
 
         .container {
-            background-color: rgba(37, 99, 235, 0.95); /* Giữ màu xanh dương cho khung */
+            background-color: rgba(37, 99, 235, 0.95); 
             border: none;
             border-radius: 20px;
             backdrop-filter: blur(10px);
@@ -54,6 +55,7 @@
         }
 
         .logo p {
+            text-align: left;
             font-size: 24px;
             color: #ffffff;
             font-weight: 400;
@@ -61,6 +63,7 @@
 
         .form-group {
             margin-bottom: 22px;
+            position: relative;
         }
 
         label {
@@ -228,14 +231,10 @@
         .password-toggle {
             position: absolute;
             right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 42px;
             cursor: pointer;
             color: #999;
-        }
-
-        .input-wrapper {
-            position: relative;
+            z-index: 2;
         }
     </style>
 </head>
@@ -274,6 +273,7 @@
                 </div>
                 <div id="confirmPasswordError" class="error"></div>
             </div>
+
             <button type="submit" class="btn-signup" id="signupButton">
                 Sign up
             </button>
@@ -284,24 +284,24 @@
         </div>
 
         <div class="social-buttons">
-            <button class="social-btn google" onclick="handleSocialSignUp('google')">
+            <button class="social-btn google" onclick="XuLyDangNhap('google')">
                 <i class="fab fa-google"></i>
             </button>
-            <button class="social-btn github" onclick="handleSocialSignUp('github')">
+            <button class="social-btn github" onclick="XuLyDangNhap('github')">
                 <i class="fab fa-github"></i>
             </button>
-            <button class="social-btn facebook" onclick="handleSocialSignUp('facebook')">
+            <button class="social-btn facebook" onclick="XuLyDangNhap('facebook')">
                 <i class="fab fa-facebook-f"></i>
             </button>
         </div>
 
         <div class="signin-link">
-            Already have an account? <a href="#" onclick="goToSignIn()">Sign in</a>
+            Already have an account? <a href="#" onclick="SignIn()">Sign in</a>
         </div>
     </div>
 
     <script>
-        // Lấy các phần tử 
+        // các phần tử 
         const form = document.getElementById('signupForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -321,8 +321,8 @@
             inputElement.style.borderColor = 'rgba(255, 255, 255, 0.2)';
         }
 
-        // Validate email
-        function validateEmail() {
+        // xác thực email
+        function XacThucEmail() {
             const emailError = document.getElementById('emailError');
             const emailValue = emailInput.value.trim();
 
@@ -341,8 +341,8 @@
             return true;
         }
 
-        // Validate password
-        function validatePassword() {
+        // Xác thực password
+        function XacThucPassword() {
             const passwordError = document.getElementById('passwordError');
             const passwordValue = passwordInput.value;
 
@@ -360,8 +360,8 @@
             return true;
         }
 
-        // Validate confirm password
-        function validateConfirmPassword() {
+        // Xác thực mật khẩu xác nhận
+        function XacThucConfirmPassword() {
             const confirmPasswordError = document.getElementById('confirmPasswordError');
             const confirmPasswordValue = confirmPasswordInput.value;
             const passwordValue = passwordInput.value;
@@ -380,13 +380,13 @@
             return true;
         }
 
-        // Xử lý sự kiện submit
+        //  submit
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const isEmailValid = validateEmail();
-            const isPasswordValid = validatePassword();
-            const isConfirmPasswordValid = validateConfirmPassword();
+            const isEmailValid = XacThucEmail();
+            const isPasswordValid = XacThucPassword();
+            const isConfirmPasswordValid = XacThucConfirmPassword();
 
             if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
                 // Giả lập gửi dữ liệu (gọi API ở đây)
@@ -394,7 +394,7 @@
                 signupButton.textContent = 'Processing...';
 
                 setTimeout(() => {
-                    alert('Registration successful!');
+                    alert('Đăng kí thành công');
                     form.reset();
                     signupButton.disabled = false;
                     signupButton.textContent = 'Sign up';
@@ -402,29 +402,28 @@
             }
         });
 
-        // Validate real-time
-        emailInput.addEventListener('input', validateEmail);
-        emailInput.addEventListener('blur', validateEmail);
-        passwordInput.addEventListener('input', validatePassword);
-        passwordInput.addEventListener('blur', validatePassword);
-        confirmPasswordInput.addEventListener('input', validateConfirmPassword);
-        confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+        // Xác thực thời gian thực
+        emailInput.addEventListener('input', XacThucEmail);
+        emailInput.addEventListener('blur', XacThucEmail);
+        passwordInput.addEventListener('input', XacThucPassword);
+        passwordInput.addEventListener('blur', XacThucPassword);
+        confirmPasswordInput.addEventListener('input', XacThucConfirmPassword);
+        confirmPasswordInput.addEventListener('blur', XacThucConfirmPassword);
 
         // Xử lý đăng nhập bằng MXH
-        function handleSocialSignUp(provider) {
-            alert(`Sign up with ${provider} (This feature needs to be connected to a real API)`);
+        function XuLyDangNhap(provider) {
+            alert(`Đăng ký với ${provider} (Kết nối với API thực)`);
         }
 
         // Chuyển hướng đến trang Sign In
-        function goToSignIn() {
-            alert('Redirecting to Sign In page');
-            // Trong thực tế: window.location.href = '/signin.html';
+        function SignIn() {
+            alert('Di chuyển đến trang Sign In');
         }
 
         // Hiển thị/ẩn mật khẩu
         function togglePassword(fieldId) {
             const passwordField = document.getElementById(fieldId);
-            const eyeIcon = passwordField.nextElementSibling.querySelector('i');
+            const eyeIcon = passwordField.parentNode.querySelector('.password-toggle i');
             
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
