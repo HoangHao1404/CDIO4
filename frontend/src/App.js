@@ -11,6 +11,8 @@ import "./styles/App.css";
 
 import Sidebar from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
+import Layout from "./components/common/Layout";
+import Setting from "./components/common/Setting";
 
 function App() {
   return (
@@ -21,8 +23,9 @@ function App() {
           "Inter, Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
       }}
     >
-      <Navbar />
-      <Sidebar />
+      <Layout>
+        {/* <Setting/> */}
+      </Layout>
     </div>
   );
 }
