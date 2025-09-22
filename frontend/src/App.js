@@ -11,6 +11,7 @@ import NavbarAirZen from "./components/common/Navbar";
 import { ThresholdePage } from "./pages/ThresholdePage";
 import { UserManagerment } from "./pages/UserManagerment";
 import { Register } from "./pages/Register";
+import Public_Page from "./pages/Public_page"
 
 function App() {
   return (
@@ -23,10 +24,11 @@ function App() {
     //     <main className="flex-1 overflow-x-hidden overflow-y-auto">
     //       {/* <ThresholdePage /> */}
     //       {/* <UserManagerment/> */}
-          <Register/>
+    //        <Register/> 
     //     </main>
     //   </div>
     // </div>
+    <Public_Page/>
   );
 }
 
