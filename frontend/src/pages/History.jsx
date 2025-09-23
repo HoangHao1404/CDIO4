@@ -109,8 +109,48 @@ const History = () => {
     }
   };
 
+  // Hàm xuất file CSV
+  const handleExport = () => {
+    const headers = [
+      "Thời gian",
+      "Nhiệt độ (°C)",
+      "Độ ẩm (%)",
+      "CO₂ (ppm)",
+      "PM2.5 (µg/m³)",
+      "Gas (%)",
+      "Tình trạng",
+    ];
+    const rows = data.map((row) => [
+      row.time,
+      row.temp,
+      row.humid,
+      row.co2,
+      row.pm25,
+      row.gas,
+      row.status,
+    ]);
+    const csvContent = [headers, ...rows]
+      .map((e) =>
+        e
+          .map(String)
+          .map((s) => `"${s.replace(/"/g, '""')}"`)
+          .join(",")
+      )
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "history.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div>
+    <div className="flex flex-col w-full max-h-screen">
       {/* Summary Cards */}
       <div className="w-full flex gap-4">
         {/* Card 1 */}
@@ -192,7 +232,10 @@ const History = () => {
             </div>
           </div>
 
-          <button className="flex items-center gap-2 bg-[#F6F6F6] rounded-lg px-3 py-2 text-[#969696] text-sm hover:bg-gray-200 hover:text-black duration-300">
+          <button
+            className="flex items-center gap-2 bg-[#F6F6F6] rounded-lg px-3 py-2 text-[#969696] text-sm hover:bg-gray-200 hover:text-black duration-300"
+            onClick={handleExport}
+          >
             <Download size={16} />
             Xuất File
           </button>

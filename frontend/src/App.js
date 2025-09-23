@@ -26,8 +26,8 @@ function App() {
       <Navbar />
       <Sidebar />
       <div className="fixed top-28 left-[250px] right-4">
-        {/* <CardData /> */}
-        <History />
+        <CardData />
+        {/* <History /> */}
       </div>
     </div>
   );
