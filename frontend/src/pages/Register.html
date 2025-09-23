@@ -14,22 +14,24 @@
         }
 
         body {
-            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+            background-color: #ffffff; 
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background-color: rgba(37, 99, 235, 0.95); 
+            border: none;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
             width: 100%;
             max-width: 440px;
             padding: 40px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
         }
 
         .logo {
@@ -38,54 +40,64 @@
         }
 
         .logo h1 {
-            font-size: 32px;
-            font-weight: 800;
-            color: #2563eb;
+            font-size: 36px;
+            font-weight: 700;
             margin-bottom: 8px;
             letter-spacing: 1px;
         }
 
+        .logo h1 .air {
+            color: #9ACD32;
+        }
+
+        .logo h1 .zen {
+            color: #ffffff;
+        }
+
         .logo p {
-            font-size: 18px;
-            color: #4b5563;
-            font-weight: 500;
+            text-align: left;
+            font-size: 24px;
+            color: #ffffff;
+            font-weight: 400;
         }
 
         .form-group {
             margin-bottom: 22px;
+            position: relative;
         }
 
         label {
             display: block;
-            font-size: 15px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 8px;
         }
 
         input {
             width: 100%;
             padding: 15px 18px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             font-size: 16px;
-            background-color: #f9fafb;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
             transition: all 0.3s ease;
         }
 
         input:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
             background-color: #fff;
         }
 
         input::placeholder {
-            color: #9ca3af;
+            color: #999;
         }
 
         .error {
-            color: #ef4444;
+            color: #ff6b6b;
             font-size: 14px;
             margin-top: 6px;
             display: none;
@@ -94,22 +106,23 @@
 
         .btn-signup {
             width: 100%;
-            background: linear-gradient(to right, #2563eb, #3b82f6);
-            color: white;
+            background: linear-gradient(135deg, #9ACD32, #7CB342);
+            color: #000;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 16px;
             font-size: 17px;
             font-weight: 700;
             cursor: pointer;
             margin-top: 15px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 12px rgba(154, 205, 50, 0.3);
         }
 
         .btn-signup:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 16px rgba(154, 205, 50, 0.4);
+            background: linear-gradient(135deg, #8BC34A, #689F38);
         }
 
         .btn-signup:active {
@@ -117,7 +130,7 @@
         }
 
         .btn-signup:disabled {
-            background: #9ca3af;
+            background: #666;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
@@ -126,10 +139,10 @@
         .divider {
             text-align: center;
             margin: 32px 0;
-            color: #6b7280;
+            color: #ffffff;
             font-size: 15px;
             position: relative;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .divider::before {
@@ -139,68 +152,72 @@
             left: 0;
             right: 0;
             height: 1px;
-            background-color: #e5e7eb;
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
         .divider span {
-            background-color: #fff;
+            background-color: rgba(37, 99, 235, 0.95);
             padding: 0 18px;
             position: relative;
         }
 
         .social-buttons {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-between;
+            gap: 8px;
             margin-bottom: 30px;
         }
 
         .social-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid #e5e7eb;
-            background-color: #fff;
+            flex: 1;
+            height: 44px;
+            border-radius: 8px;
+            border: none;
+            background-color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 500;
             transition: all 0.3s ease;
-            color: #4b5563;
+            color: #666;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .social-btn:hover {
-            background-color: #f3f4f6;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .social-btn.google:hover {
-            color: #db4437;
-            border-color: #db4437;
+        .social-btn.google {
+            color: #4285f4;
         }
 
-        .social-btn.facebook:hover {
-            color: #4267B2;
-            border-color: #4267B2;
+        .social-btn.google .fa-google {
+            background: linear-gradient(45deg, #ea4335 25%, #4285f4 25%, #4285f4 50%, #34a853 50%, #34a853 75%, #fbbc05 75%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .social-btn.twitter:hover {
-            color: #1DA1F2;
-            border-color: #1DA1F2;
+        .social-btn.github {
+            color: #333;
+        }
+
+        .social-btn.facebook {
+            color: #1877f2;
         }
 
         .signin-link {
             text-align: center;
             font-size: 15px;
-            color: #6b7280;
-            font-weight: 500;
+            color: #ffffff;
+            font-weight: 400;
         }
 
         .signin-link a {
-            color: #2563eb;
+            color: #9ACD32;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.2s ease;
@@ -208,27 +225,23 @@
 
         .signin-link a:hover {
             text-decoration: underline;
-            color: #1e40af;
+            color: #8BC34A;
         }
 
         .password-toggle {
             position: absolute;
             right: 15px;
             top: 42px;
-            transform: translateY(-50%);
             cursor: pointer;
-            color: #9ca3af;
-        }
-
-        .input-wrapper {
-            position: relative;
+            color: #999;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">
-            <h1>AirZen</h1>
+            <h1><span class="air">Air</span><span class="zen">Zen</span></h1>
             <p>Sign up</p>
         </div>
 
@@ -271,24 +284,24 @@
         </div>
 
         <div class="social-buttons">
-            <button class="social-btn google" onclick="handleSocialSignUp('google')">
+            <button class="social-btn google" onclick="XuLyDangNhap('google')">
                 <i class="fab fa-google"></i>
             </button>
-            <button class="social-btn facebook" onclick="handleSocialSignUp('facebook')">
-                <i class="fab fa-facebook-f"></i>
+            <button class="social-btn github" onclick="XuLyDangNhap('github')">
+                <i class="fab fa-github"></i>
             </button>
-            <button class="social-btn twitter" onclick="handleSocialSignUp('twitter')">
-                <i class="fab fa-twitter"></i>
+            <button class="social-btn facebook" onclick="XuLyDangNhap('facebook')">
+                <i class="fab fa-facebook-f"></i>
             </button>
         </div>
 
         <div class="signin-link">
-            Already have an account? <a href="#" onclick="goToSignIn()">Sign in</a>
+            Already have an account? <a href="#" onclick="SignIn()">Sign in</a>
         </div>
     </div>
 
     <script>
-        // Lấy các phần tử 
+        // các phần tử 
         const form = document.getElementById('signupForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -299,17 +312,17 @@
         function showError(inputElement, errorElement, message) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
-            inputElement.style.borderColor = '#ef4444';
+            inputElement.style.borderColor = '#ff6b6b';
         }
 
         // Hàm ẩn lỗi
         function hideError(inputElement, errorElement) {
             errorElement.style.display = 'none';
-            inputElement.style.borderColor = '#e5e7eb';
+            inputElement.style.borderColor = 'rgba(255, 255, 255, 0.2)';
         }
 
-        // email
-        function validateEmail() {
+        // xác thực email
+        function XacThucEmail() {
             const emailError = document.getElementById('emailError');
             const emailValue = emailInput.value.trim();
 
@@ -328,7 +341,8 @@
             return true;
         }
 
-        function validatePassword() {
+        // Xác thực password
+        function XacThucPassword() {
             const passwordError = document.getElementById('passwordError');
             const passwordValue = passwordInput.value;
 
@@ -346,8 +360,8 @@
             return true;
         }
 
-        // Validate confirm password
-        function validateConfirmPassword() {
+        // Xác thực mật khẩu xác nhận
+        function XacThucConfirmPassword() {
             const confirmPasswordError = document.getElementById('confirmPasswordError');
             const confirmPasswordValue = confirmPasswordInput.value;
             const passwordValue = passwordInput.value;
@@ -366,13 +380,13 @@
             return true;
         }
 
-        // Xử lý sự kiện submit
+        //  submit
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const isEmailValid = validateEmail();
-            const isPasswordValid = validatePassword();
-            const isConfirmPasswordValid = validateConfirmPassword();
+            const isEmailValid = XacThucEmail();
+            const isPasswordValid = XacThucPassword();
+            const isConfirmPasswordValid = XacThucConfirmPassword();
 
             if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
                 // Giả lập gửi dữ liệu (gọi API ở đây)
@@ -380,7 +394,7 @@
                 signupButton.textContent = 'Processing...';
 
                 setTimeout(() => {
-                    alert('Registration successful!');
+                    alert('Đăng kí thành công');
                     form.reset();
                     signupButton.disabled = false;
                     signupButton.textContent = 'Sign up';
@@ -388,17 +402,17 @@
             }
         });
 
-        // Thời gian thật
-        emailInput.addEventListener('input', validateEmail);
-        emailInput.addEventListener('blur', validateEmail);
-        passwordInput.addEventListener('input', validatePassword);
-        passwordInput.addEventListener('blur', validatePassword);
-        confirmPasswordInput.addEventListener('input', validateConfirmPassword);
-        confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+        // Xác thực thời gian thực
+        emailInput.addEventListener('input', XacThucEmail);
+        emailInput.addEventListener('blur', XacThucEmail);
+        passwordInput.addEventListener('input', XacThucPassword);
+        passwordInput.addEventListener('blur', XacThucPassword);
+        confirmPasswordInput.addEventListener('input', XacThucConfirmPassword);
+        confirmPasswordInput.addEventListener('blur', XacThucConfirmPassword);
 
         // Xử lý đăng nhập bằng MXH
-        function handleSocialSignUp(provider) {
-            alert(`Sign up with ${provider} (This feature needs to be connected to a real API)`);
+        function XuLyDangNhap(provider) {
+            alert(`Đăng ký với ${provider} (Kết nối với API thực)`);
         }
 
         // Chuyển hướng đến trang Sign In
@@ -410,7 +424,7 @@
         // Hiển thị/ẩn mật khẩu
         function togglePassword(fieldId) {
             const passwordField = document.getElementById(fieldId);
-            const eyeIcon = passwordField.nextElementSibling.querySelector('i');
+            const eyeIcon = passwordField.parentNode.querySelector('.password-toggle i');
             
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
