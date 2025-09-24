@@ -1,12 +1,12 @@
 import React from 'react'
-import UserTable from '../components/common/UserTable'
+import UserTable from "../components/common/UserTable"  // Fixed import path
 
 export const UserManagerment = () => {
   return (
     <div className="container mx-auto px-6 py-8">      
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <UserTable/>
-      </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+            <UserTable/>
+        </div>
     </div>
   )
 }
