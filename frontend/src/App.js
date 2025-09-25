@@ -11,8 +11,8 @@ import "./styles/App.css";
 
 import Sidebar from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
-import CardData from "./components/common/CardData";
 import History from "./pages/History";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -26,8 +26,8 @@ function App() {
       <Navbar />
       <Sidebar />
       <div className="fixed top-28 left-[250px] right-4">
-        <CardData />
         {/* <History /> */}
+        <Dashboard />
       </div>
     </div>
   );
