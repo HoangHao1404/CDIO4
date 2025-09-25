@@ -1,8 +1,4 @@
-// ==================================================
-// MAIN APP COMPONENT
-// ==================================================
-// Component gốc chứa toàn bộ ứng dụng React
-// Cấu hình routing, context providers, và layout chính
+// src/App.js (hoặc App.jsx)
 
 import React from "react";
 import {
@@ -11,11 +7,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-// Import styles
+
+// Styles
 import "./styles/App.css";
-import AirQualityIndexPage from "./pages/AirQualityIndexPage";
+
+// Layout
 import Sidebar from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
+
+// Pages
+import Dashboard from "./pages/Dashboard";
+import History from "./pages/History";
+import AirQualityIndexPage from "./pages/AirQualityIndexPage";
 
 function App() {
   return (
@@ -27,12 +30,23 @@ function App() {
       }}
     >
       <Router>
+        {/* Global fixed layout components */}
         <Navbar />
         <Sidebar />
-        <main className="ml-[250px] pt-[120px] px-6 h-screen overflow-y-hidden">
+
+        {/* Main content area aligned with fixed Navbar + Sidebar */}
+        <main className="ml-[250px] pt-[120px] px-6 h-screen overflow-y-auto">
           <div className="h-full max-w-[1280px] mx-auto">
             <Routes>
+              {/* Pages */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/history" element={<History />} />
               <Route path="/air-quality" element={<AirQualityIndexPage />} />
+
+              {/* Default route -> dashboard */}
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </div>
         </main>
