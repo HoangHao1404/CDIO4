@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaGoogle, FaGithub, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -38,11 +38,18 @@ export const SignIn = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
           <div>
             <h3 className="font-medium">Đăng nhập thành công!</h3>
-            <p className="text-sm text-green-100">Chào mừng bạn quay lại AirZen</p>
+            <p className="text-sm text-green-100">
+              Chào mừng bạn quay lại AirZen
+            </p>
           </div>
         </div>
       )}
@@ -52,25 +59,27 @@ export const SignIn = () => {
         className="min-h-screen flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')",
+            "url('https://i.postimg.cc/SsccGFRk/background.png')",
         }}
       >
-        <div className="bg-black/60 backdrop-blur-md rounded-2xl shadow-lg p-8 w-full max-w-md">
+        <div className="bg-[#D9D9D9]/10 backdrop-blur-md rounded-2xl shadow-lg p-8 w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-4xl font-bold">
               <span className="text-lime-400">Air</span>
               <span className="text-white">Zen</span>
             </h1>
-            <p className="text-white text-lg mt-2">Sign in</p>
+            <p className="text-white text-xl font-semibold mt-2">Sign in</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+            {error && (
+              <p className="text-red-400 text-sm text-center">{error}</p>
+            )}
 
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label className="block text-white text-md font-medium mb-2">
                 Email
               </label>
               <input
@@ -78,13 +87,13 @@ export const SignIn = () => {
                 placeholder="username@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
+                className="w-full px-4 py-3 text-lg rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
                 required
               />
             </div>
 
             <div className="relative">
-              <label className="block text-white text-sm font-medium mb-2">
+              <label className="block text-white text-md font-medium mb-2">
                 Password
               </label>
               <input
@@ -92,21 +101,15 @@ export const SignIn = () => {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
+                className="w-full px-4 py-3 text-lg rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
                 required
               />
-              <span
-                className="absolute right-4 top-11 cursor-pointer text-gray-500"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
             </div>
 
             <div className="flex justify-end">
-              <a href="#" className="text-sm text-lime-400 hover:underline">
+              <NavLink to="#" className="text-sm text-lime-400 hover:underline">
                 Quên mật khẩu?
-              </a>
+              </NavLink>
             </div>
 
             <button
@@ -140,26 +143,38 @@ export const SignIn = () => {
 
           {/* Social Login */}
           <div className="flex gap-3">
-            <button className="flex-1 flex items-center justify-center py-2 rounded-lg bg-white shadow hover:bg-gray-100 text-red-500">
-              <FaGoogle className="text-lg" />
+            <button className="flex flex-1 items-center justify-center bg-white border border-gray-300 px-4 py-2 rounded-lg cursor-pointer hover:scale-101 hover:shadow-md transition-transform duration-500">
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                class="w-5 h-5"
+              />
             </button>
-            <button className="flex-1 flex items-center justify-center py-2 rounded-lg bg-white shadow hover:bg-gray-100 text-gray-800">
-              <FaGithub className="text-lg" />
+            <button className="flex flex-1 items-center justify-center bg-white border border-gray-300 px-4 py-2 rounded-lg cursor-pointer hover:scale-101 hover:shadow-md transition-transform duration-500">
+              <img
+                src="https://www.svgrepo.com/show/394174/github.svg"
+                alt="Github"
+                class="w-5 h-5"
+              />
             </button>
-            <button className="flex-1 flex items-center justify-center py-2 rounded-lg bg-white shadow hover:bg-gray-100 text-blue-600">
-              <FaFacebookF className="text-lg" />
+            <button className="flex flex-1 items-center justify-center bg-white border border-gray-300 px-4 py-2 rounded-lg cursor-pointer hover:scale-101 hover:shadow-md transition-transform duration-500">
+              <img
+                src="https://www.svgrepo.com/show/475647/facebook-color.svg"
+                alt="Facebook"
+                class="w-5 h-5"
+              />
             </button>
           </div>
 
           {/* Link đến Register */}
           <p className="text-center text-gray-300 text-sm mt-6">
             Don’t have an account yet?{" "}
-            <a
-              href="/register"
+            <NavLink
+              to="/register"
               className="text-lime-400 font-semibold hover:underline"
             >
               Register
-            </a>
+            </NavLink>
           </p>
         </div>
       </div>

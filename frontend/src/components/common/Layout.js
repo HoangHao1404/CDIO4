@@ -20,7 +20,7 @@ export default function Layout() {
         {/* Nội dung */}
         <main
           className="flex-1 p-6 overflow-x-hidden"
-          style={{ marginTop: `${NAVBAR_H + 28}px` }}
+          style={{ marginTop: `${NAVBAR_H + 20}px` }}
         >
           <Outlet />
         </main>

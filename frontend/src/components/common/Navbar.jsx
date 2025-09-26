@@ -9,6 +9,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 
 // Mock user
@@ -33,8 +34,16 @@ const Avatar = ({ src, alt }) => (
 export default function NavbarAirZen() {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [openUser, setOpenUser] = useState(false);
+
+  // Hàm xử lý đăng xuất
+  const handleLogout = () => {
+    // có thể thêm logic xóa token, đăng xuất, v.v.
+    navigate("/signin");
+    setOpenUser(false);
+  };
 
   return (
     <header
@@ -47,10 +56,12 @@ export default function NavbarAirZen() {
         style={{ height: "70px" }}
       >
         {/* Weather */}
-        <div className="hidden sm:flex items-center gap-2 rounded-full 
+        <div
+          className="hidden sm:flex items-center gap-2 rounded-full 
                         bg-zinc-100/90 dark:bg-zinc-700 
                         text-zinc-700 dark:text-zinc-200 
-                        px-4 py-2 shadow-inner">
+                        px-4 py-2 shadow-inner"
+        >
           <Cloud className="h-4 w-4 opacity-70" />
           <span className="text-sm">26°C</span>
           <span className="text-zinc-400">|</span>
@@ -93,14 +104,18 @@ export default function NavbarAirZen() {
             >
               <ul className="space-y-1">
                 <li>
-                  <button className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
-                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm dark:text-zinc-200">
+                  <button
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
+                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm dark:text-zinc-200"
+                  >
                     <User className="h-4 w-4" /> Hồ sơ
                   </button>
                 </li>
                 <li>
-                  <button className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
-                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm dark:text-zinc-200">
+                  <button
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
+                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm dark:text-zinc-200"
+                  >
                     <Settings className="h-4 w-4" /> Cài đặt
                   </button>
                 </li>
@@ -119,8 +134,11 @@ export default function NavbarAirZen() {
                   </button>
                 </li>
                 <li>
-                  <button className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
-                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm text-rose-600">
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
+                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm text-rose-600"
+                  >
                     <LogOut className="h-4 w-4" /> Đăng xuất
                   </button>
                 </li>
