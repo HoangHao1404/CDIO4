@@ -6,25 +6,28 @@
 
 import React from "react";
 import "./styles/App.css";
-
-import Sidebar from "./components/common/Sidebar";
-import Navbar from "./components/common/Navbar";
 import Layout from "./components/common/Layout";
-import Setting from "./components/common/Setting";
+import { DeviceManagerment } from "./pages/DeviceManagerment";
+import { UserManagerment } from "./pages/UserManagerment";
+import { ThresholdePage } from "./pages/ThresholdePage";
+import Register from "./pages/Register";
+import SignIn from "./pages/Sign_in";
 
 function App() {
   return (
-    <div
-      className="App bg-gray-100"
-      style={{
-        fontFamily:
-          "Inter, Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-      }}
-    >
+    // Remove Register and SignIn from Layout since they're full-page components
+    <>
+      {/* Main app with Layout */}
       <Layout>
-        {/* <Setting/> */}
+        <DeviceManagerment />
+        {/* <UserManagerment /> */}
+        {/* <ThresholdePage /> */}
       </Layout>
-    </div>
+
+      {/* Full page components */}
+      {/* <Register /> */}
+      {/* <SignIn /> */}
+    </>
   );
 }
 
