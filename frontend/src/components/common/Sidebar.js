@@ -1,18 +1,14 @@
-<<<<<<< HEAD
-import React from "react";
-import icdashboard from "../../image/ic_dashboard.png";
+import React, { useState, useRef, useEffect } from "react";
+import { useTheme } from "../../context/ThemeContext";
 
-// Update other image imports as well
+// Import icons
+import icdashboard from "../../image/ic_dashboard.png";
 import icAirQuality from "../../image/ic_chisokk.png";
 import icThreshold from "../../image/ic_threshold.png";
 import icHistory from "../../image/ic_history.png";
 import icSettings from "../../image/ic_setting.png";
 import icLogout from "../../image/ic_logout.png";
 
-=======
-import React, { useState, useRef, useEffect } from "react";
-import { useTheme } from "../../context/ThemeContext";
->>>>>>> hao
 const Sidebar = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { theme } = useTheme();
@@ -21,27 +17,27 @@ const Sidebar = () => {
     {
       key: "Dashboard",
       label: "Dashboard",
-      icon: require("../../image/overview.png"),
+      icon: icdashboard,
     },
     {
       key: "AirQuality",
       label: "Chỉ số không khí",
-      icon: require("../../image/Chisokk.png"),
+      icon: icAirQuality,
     },
     {
       key: "SafeThreshold",
       label: "Ngưỡng an toàn",
-      icon: require("../../image/NguongAnToan.png"),
+      icon: icThreshold,
     },
     {
       key: "History",
       label: "Lịch sử",
-      icon: require("../../image/LichSu.png"),
+      icon: icHistory,
     },
     {
       key: "Settings",
       label: "Cài đặt",
-      icon: require("../../image/CaiDat.png"),
+      icon: icSettings,
     },
   ];
 
@@ -89,11 +85,11 @@ const Sidebar = () => {
   }, [menuItems.length]);
 
   return (
-    <div className="fixed left-[-10px] top-0 h-screen w-[250px] flex items-start justify-start p-7  z-30">
+    <div className="fixed left-[-10px] top-0 h-screen w-[250px] flex items-start justify-start p-7 z-30">
       <div className="relative">
         <aside
           className={`w-[216px] h-[755px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
-    ${theme === "light" ? "bg-white text-black" : "bg-zinc-900 text-zinc-200"}`}
+          ${theme === "light" ? "bg-white text-black" : "bg-zinc-900 text-zinc-200"}`}
         >
           {/* Logo AirZen */}
           <div className="absolute left-[63px] top-[36px]">
@@ -128,90 +124,7 @@ const Sidebar = () => {
             }}
           />
 
-<<<<<<< HEAD
           {/* Navigation Menu */}
-          <nav className="absolute left-[32px] top-[115px] w-[161px] flex flex-col gap-[45px]">
-            {/* Dashboard */}
-            <a href="#" className="flex items-center gap-2 h-6 relative z-10">
-              <img
-                src={icdashboard}
-                alt="Overview"
-                className="icon-fix brightness-0"
-                style={{ width: "18px", height: "18px" }}
-                onError={(e) => {
-                  e.currentTarget.style.backgroundColor = "#666";
-                }}
-              />
-              <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-black">
-                Dashboard
-              </span>
-            </a>
-
-            {/* Chỉ số không khí */}
-            <a href="#" className="flex items-center gap-2 h-6">
-              <img
-                src={icAirQuality}
-                alt="Users"
-                className="icon-fix brightness-0"
-                style={{ width: "18px", height: "18px" }}
-                onError={(e) => {
-                  e.currentTarget.style.backgroundColor = "#666";
-                }}
-              />
-              <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696]">
-                Chỉ số không khí
-              </span>
-            </a>
-
-            {/* Ngưỡng an toàn */}
-            <a href="#" className="flex items-center gap-2 h-6">
-              <img
-                src={icThreshold}
-                alt="Support"
-                className="icon-fix brightness-0"
-                style={{ width: "18px", height: "18px" }}
-                onError={(e) => {
-                  e.currentTarget.style.backgroundColor = "#666";
-                }}
-              />
-              <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696]">
-                Ngưỡng an toàn
-              </span>
-            </a>
-
-            {/* Lịch sử */}
-            <a href="#" className="flex items-center gap-2 h-6">
-              <img
-                src={icHistory}
-                alt="Notifications"
-                className="icon-fix brightness-0"
-                style={{ width: "18px", height: "18px" }}
-                onError={(e) => {
-                  e.currentTarget.style.backgroundColor = "#666";
-                }}
-              />
-              <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696]">
-                Lịch sử
-              </span>
-            </a>
-
-            {/* Cài đặt */}
-            <a href="#" className="flex items-center gap-2 h-6">
-              <img
-                src={icSettings}
-                alt="Settings"
-                className="icon-fix brightness-0"
-                style={{ width: "18px", height: "18px" }}
-                onError={(e) => {
-                  e.currentTarget.style.backgroundColor = "#666";
-                }}
-              />
-              <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696]">
-                Cài đặt
-              </span>
-            </a>
-=======
-          {/* Menu */}
           <nav
             ref={navRef}
             className="absolute left-[32px] top-[115px] w-[161px] flex flex-col gap-[45px]"
@@ -220,55 +133,42 @@ const Sidebar = () => {
               <a
                 key={item.key}
                 href="#"
+                className="flex items-center gap-2 h-6 relative z-10"
                 onClick={() => setActiveIndex(index)}
-                className={`flex items-center gap-3 relative z-10 select-none transition-all duration-200 ${
-                  activeIndex === index ? "" : "hover:translate-x-1"
-                }`}
-                style={{ padding: "8px 4px", minHeight: `${HIGHLIGHT_H}px` }}
               >
-                <div className="flex items-center justify-center flex-shrink-0">
-                  <img
-                    src={item.icon}
-                    alt={item.label}
-                    className={`w-5 h-5 transition-all duration-200
-                      ${
-                        theme === "dark"
-                          ? "opacity-80 filter grayscale"
-                          : "opacity-100"
-                      }`}
-                  />
-                </div>
+                <img
+                  src={item.icon}
+                  alt={item.label}
+                  className={`icon-fix w-[18px] h-[18px] brightness-0 ${
+                    theme === "dark" ? "brightness-200" : ""
+                  }`}
+                  onError={(e) => {
+                    e.currentTarget.style.backgroundColor = "#666";
+                  }}
+                />
                 <span
-                  className={`font-['Inter'] text-[16px] leading-[20px] ${
+                  className={`font-['Inter'] font-normal text-[16px] leading-[20px] ${
                     activeIndex === index
-                      ? `${
-                          theme === "light"
-                            ? "font-semibold text-emerald-800"
-                            : "font-semibold text-emerald-100"
-                        }`
-                      : `${
-                          theme === "light" ? "text-zinc-600" : "text-zinc-300"
-                        }`
+                      ? "text-black dark:text-white"
+                      : "text-[#969696] dark:text-zinc-400"
                   }`}
                 >
                   {item.label}
                 </span>
               </a>
             ))}
->>>>>>> hao
           </nav>
+
+          {/* Logout button */}
           <button className="absolute bottom-[27px] left-[63px] flex items-center gap-1">
-<<<<<<< HEAD
-            <img src={icLogout} alt="Logout" className="w-5 h-5 brightness-0" />
-            <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696] ml-1">
-=======
             <img
-              src={require("../../image/Logout.png")}
+              src={icLogout}
               alt="Logout"
-              className="w-5 h-5"
+              className={`w-5 h-5 brightness-0 ${
+                theme === "dark" ? "brightness-200" : ""
+              }`}
             />
-            <span className="font-['Inter'] text-[16px] text-[#969696] dark:text-zinc-400 ml-1">
->>>>>>> hao
+            <span className="font-['Inter'] font-normal text-[16px] leading-[20px] text-[#969696] dark:text-zinc-400 ml-1">
               Log Out
             </span>
           </button>
