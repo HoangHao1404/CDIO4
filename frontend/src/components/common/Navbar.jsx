@@ -238,7 +238,7 @@ export default function NavbarAirZen() {
       style={{ transition: "background-color 300ms ease, color 300ms ease" }}
     >
       <div
-        className="mx-auto mr-4 rounded-3xl bg-white/90 dark:bg-zinc-900 shadow px-2 py-2"
+        className="mx-auto mr-4 rounded-[20px] bg-white dark:bg-zinc-900 shadow px-2 py-2"
         style={{ transition: "background-color 300ms ease, color 300ms ease" }}
       >
         <div className="flex items-center justify-end gap-3">
