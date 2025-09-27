@@ -2,15 +2,10 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./styles/App.css";
 
-<<<<<<< HEAD
-// Layout
-import Layout from "./components/common/Layout";
-=======
 // Layout & guards
 import Layout from "./components/common/Layout";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/common/ProtectedRoute";
->>>>>>> origin/Tun
 
 // Pages
 import Dashboard from "./pages/Dashboard";
