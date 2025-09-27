@@ -1,35 +1,47 @@
 import React, { useState } from "react";
-import { FaGoogle, FaGithub, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaGoogle,
+  FaGithub,
+  FaFacebookF,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export const SignIn = () => {
+  const nav = useNavigate();
+  const location = useLocation();
+  const { login, error, clearError } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    clearError?.();
 
-    if (!email || !password) {
-      setError("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-    setError("");
+    if (!email || !password) return;
 
     setIsLoading(true);
+    const res = await login(email, password);
+    setIsLoading(false);
 
-    setTimeout(() => {
-      setIsLoading(false);
+    if (res.success) {
       setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    }, 1500);
+      const returnTo = location.state?.returnTo || "/dashboard";
+      setTimeout(() => {
+        setShowToast(false);
+        nav(returnTo, { replace: true });
+      }, 800);
+    }
   };
 
   return (
     <>
-      {/* Toast khi đăng nhập thành công */}
       {showToast && (
         <div className="fixed top-4 right-4 flex items-center gap-2 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50">
           <svg
@@ -38,16 +50,22 @@ export const SignIn = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
           <div>
             <h3 className="font-medium">Đăng nhập thành công!</h3>
-            <p className="text-sm text-green-100">Chào mừng bạn quay lại AirZen</p>
+            <p className="text-sm text-green-100">
+              Chào mừng bạn quay lại AirZen
+            </p>
           </div>
         </div>
       )}
 
-      {/* Layout chính */}
       <div
         className="min-h-screen flex items-center justify-center bg-cover bg-center"
         style={{
@@ -56,7 +74,6 @@ export const SignIn = () => {
         }}
       >
         <div className="bg-black/60 backdrop-blur-md rounded-2xl shadow-lg p-8 w-full max-w-md">
-          {/* Logo */}
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold">
               <span className="text-lime-400">Air</span>
@@ -65,9 +82,10 @@ export const SignIn = () => {
             <p className="text-white text-lg mt-2">Sign in</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+            {error && (
+              <p className="text-red-400 text-sm text-center">{error}</p>
+            )}
 
             <div>
               <label className="block text-white text-sm font-medium mb-2">
@@ -131,14 +149,12 @@ export const SignIn = () => {
             </button>
           </form>
 
-          {/* Divider */}
           <div className="flex items-center my-6">
             <div className="flex-grow h-px bg-gray-500"></div>
             <span className="px-4 text-gray-300 text-sm">or continue with</span>
             <div className="flex-grow h-px bg-gray-500"></div>
           </div>
 
-          {/* Social Login */}
           <div className="flex gap-3">
             <button className="flex-1 flex items-center justify-center py-2 rounded-lg bg-white shadow hover:bg-gray-100 text-red-500">
               <FaGoogle className="text-lg" />
@@ -151,7 +167,6 @@ export const SignIn = () => {
             </button>
           </div>
 
-          {/* Link đến Register */}
           <p className="text-center text-gray-300 text-sm mt-6">
             Don’t have an account yet?{" "}
             <a
