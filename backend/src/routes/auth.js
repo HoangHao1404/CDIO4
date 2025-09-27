@@ -1,9 +1,43 @@
-const express = require("express");
-const { register, login } = require("../controllers/authController");
+// ==================================================
+// AUTHENTICATION ROUTES  (/api/auth/*)
+// ==================================================
+import express from "express";
+import { body } from "express-validator";
+import {
+  register,
+  login,
+  getProfile,
+  logout,
+} from "../controllers/authController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
+const registerValidation = [
+  body("name")
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Name must be between 2 and 50 characters"),
+  body("email")
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Please provide a valid email"),
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+];
 
-module.exports = router;
+const loginValidation = [
+  body("email")
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Please provide a valid email"),
+  body("password").notEmpty().withMessage("Password is required"),
+];
+
+router.post("/register", registerValidation, register);
+router.post("/login", loginValidation, login);
+router.get("/me", protect, getProfile);
+router.post("/logout", protect, logout);
+
+export default router;

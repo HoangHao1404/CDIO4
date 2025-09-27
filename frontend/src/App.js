@@ -2,8 +2,15 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./styles/App.css";
 
+<<<<<<< HEAD
 // Layout
 import Layout from "./components/common/Layout";
+=======
+// Layout & guards
+import Layout from "./components/common/Layout";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+>>>>>>> origin/Tun
 
 // Pages
 import Dashboard from "./pages/Dashboard";
@@ -19,31 +26,32 @@ import Public_page from "./pages/Public_page";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Trang public */}
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public */}
           <Route path="/" element={<Public_page />} />
-
-          {/* Auth */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
 
+          {/* Protected */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/air-quality" element={<AirQualityIndexPage />} />
+              <Route path="/devices" element={<DeviceManagerment />} />
+              <Route path="/users" element={<UserManagerment />} />
+              <Route path="/threshold" element={<ThresholdePage />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/settings" element={<Setting />} />
+            </Route>
+          </Route>
 
-        {/* Protected Routes with Layout */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="air-quality" element={<AirQualityIndexPage />} />
-          <Route path="devices" element={<DeviceManagerment />} />
-          <Route path="users" element={<UserManagerment />} />
-          <Route path="threshold" element={<ThresholdePage />} />
-          <Route path="history" element={<History />} />
-          <Route path="settings" element={<Setting />} />
-        </Route>
-
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
