@@ -96,7 +96,7 @@ export const SignIn = () => {
                 placeholder="username@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 text-lg rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
+                className="w-full px-4 py-3 text-lg text-lg rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
                 required
               />
             </div>
@@ -110,15 +110,9 @@ export const SignIn = () => {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
+                className="w-full px-4 py-3 rounded-lg text-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
                 required
               />
-              <span
-                className="absolute right-4 top-11 cursor-pointer text-gray-500"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
             </div>
 
             <div className="flex justify-end">
