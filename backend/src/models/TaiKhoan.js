@@ -1,15 +1,25 @@
-// ========================
-// 1. TaiKhoan MODEL (đổi từ User.js)
-// ========================
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+
+// Hàm tạo ID tự động dạng TK1, TK2,...
+async function generateNextTaiKhoanId() {
+  const last = await mongoose
+    .model("TaiKhoan")
+    .findOne({})
+    .sort({ _id: -1 })
+    .collation({ locale: "en", numericOrdering: true });
+
+  if (!last || !last._id?.startsWith("TK")) return "TK1";
+
+  const num = parseInt(last._id.slice(2)) + 1;
+  return `TK${num}`;
+}
 
 const taiKhoanSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
-      default: () => new mongoose.Types.ObjectId().toString(),
-    }, // optional custom ID
+    },
     TenDangNhap: {
       type: String,
       required: true,
@@ -27,7 +37,7 @@ const taiKhoanSchema = new mongoose.Schema(
       select: false,
     },
     VaiTro: {
-      type: [String], // ví dụ: ['khachhang'] hoặc ['admin']
+      type: [String],
       default: ["khachhang"],
     },
     TrangThai: {
@@ -55,7 +65,12 @@ const taiKhoanSchema = new mongoose.Schema(
   }
 );
 
+// Tự động gán ID dạng "TK1", "TK2",...
 taiKhoanSchema.pre("save", async function (next) {
+  if (!this._id) {
+    this._id = await generateNextTaiKhoanId();
+  }
+
   if (!this.isModified("MatKhau")) return next();
   const salt = await bcrypt.genSalt(12);
   this.MatKhau = await bcrypt.hash(this.MatKhau, salt);

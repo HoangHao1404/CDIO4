@@ -1,9 +1,6 @@
-// ==================================================
-// AUTH CONTROLLER
-// ==================================================
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
-import TaiKhoan from "../models/TaiKhoan.js"; // ✅ Đúng model mới
+import TaiKhoan from "../models/TaiKhoan.js";
 
 const COOKIE_NAME = process.env.COOKIE_NAME || "token";
 
@@ -18,7 +15,7 @@ const setAuthCookie = (res, token) => {
     httpOnly: true,
     secure: isProd,
     sameSite: isProd ? "none" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
 
@@ -52,16 +49,43 @@ export const register = async (req, res, next) => {
       });
 
     const { name, email, password } = req.body;
+
+    // 1. Kiểm tra email đã tồn tại
     const existed = await TaiKhoan.findOne({ Email: email });
     if (existed)
       return res
         .status(400)
         .json({ success: false, error: { message: "Email already exists" } });
 
+    // 2. Tìm _id lớn nhất hiện tại theo format TK<number>
+    const latestAccount = await TaiKhoan.findOne({ _id: /^TK\d+$/ })
+      .sort({ _id: -1 })
+      .lean();
+
+    let nextId = "TK1";
+    if (latestAccount) {
+      const currentNum = parseInt(latestAccount._id.replace("TK", ""));
+      nextId = "TK" + (currentNum + 1);
+    }
+
+    // 3. Tìm ID_KhachHang lớn nhất theo format KH<number>
+    const latestKH = await TaiKhoan.findOne({ ID_KhachHang: /^KH\d+$/ })
+      .sort({ ID_KhachHang: -1 })
+      .lean();
+
+    let nextKH = "KH1";
+    if (latestKH && latestKH.ID_KhachHang) {
+      const currentKH = parseInt(latestKH.ID_KhachHang.replace("KH", ""));
+      nextKH = "KH" + (currentKH + 1);
+    }
+
+    // 4. Tạo tài khoản mới với _id và ID_KhachHang custom
     await TaiKhoan.create({
+      _id: nextId,
       TenDangNhap: name,
       Email: email,
       MatKhau: password,
+      ID_KhachHang: nextKH,
     });
 
     return res.status(201).json({
@@ -74,7 +98,6 @@ export const register = async (req, res, next) => {
   }
 };
 
-// @route POST /api/auth/login
 export const login = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -85,7 +108,7 @@ export const login = async (req, res, next) => {
       });
 
     const { email, password } = req.body;
-    const user = await TaiKhoan.findByEmail(email); // ✅ sửa model
+    const user = await TaiKhoan.findByEmail(email);
     if (!user)
       return res
         .status(401)
@@ -104,7 +127,6 @@ export const login = async (req, res, next) => {
   }
 };
 
-// @route GET /api/auth/me
 export const getProfile = async (req, res, next) => {
   try {
     const user = await TaiKhoan.findById(req.user.id);
@@ -119,7 +141,6 @@ export const getProfile = async (req, res, next) => {
   }
 };
 
-// @route POST /api/auth/logout
 export const logout = async (_req, res, next) => {
   try {
     const isProd = String(process.env.COOKIE_SECURE).toLowerCase() === "true";
