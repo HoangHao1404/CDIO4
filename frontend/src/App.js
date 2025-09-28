@@ -6,23 +6,24 @@
 
 import React from "react";
 import "./styles/App.css";
-import Dashboard from "./pages/Dashboard";
+
 import Sidebar from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
-import UserTable from "./components/common/UserTable";
-import { DeviceManagerment } from "./pages/DeviceManagerment";
+import Layout from "./components/common/Layout";
+import Setting from "./components/common/Setting";
 
 function App() {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <Navbar />
-      <div className="fixed top-28 left-[250px] right-4">
-        {/* <Dashboard/> */}
-        <UserTable/>
-        {/* <DeviceManagerment/> */}
-
-      </div>
+    <div
+      className="App bg-gray-100"
+      style={{
+        fontFamily:
+          "Inter, Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+      }}
+    >
+      <Layout>
+        {/* <Setting/> */}
+      </Layout>
     </div>
   );
 }
