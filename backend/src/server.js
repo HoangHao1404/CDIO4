@@ -116,14 +116,25 @@
 // ==================================================
 //* Kết nối mongoDB
 // ==================================================
-//! Bước 1: Import các thư viện cần thiết
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors"); // Đây là thư viện để xử lý các yêu cầu từ các nguồn khác nhau
-const dotenv = require("dotenv"); // Thư viện để quản lý biến môi trường
-require("dotenv").config(); // Load biến môi trường từ file .env
+// File này là điểm khởi đầu của backend server
+// Chứa cấu hình Express, middleware và khởi chạy server
 
-//! Bước 2: Khởi tạo ứng dụng Express
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+
+// Import các module tự tạo
+import connectDB from "./config/database.js";
+import errorHandler from "./middleware/errorHandler.js";
+
+// Import routes
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+
+// Load environment variables
+dotenv.config();
+
+// Khởi tạo Express app
 const app = express();
 const PORT = process.env.BACKEND_PORT || 5000; // Cổng mà server sẽ lắng nghe
  
@@ -184,23 +195,25 @@ app.listen(PORT, ()=>{
 
 
 // ==================================================
-
-//! API tài khoản
-const TaiKhoan = mongoose.model("TaiKhoan", {
-  TenDangNhap: String,
-  MatKhau: String,
-  TrangThai: String,
-  NgayTao: Date,
-  VaiTro: [String],
-  ID_KhachHang: String
-}, "TaiKhoan"); // ép rõ collection là "TaiKhoan"
-
-module.exports = TaiKhoan;
-app.get("/taikhoan", async (req, res) => {
-  try {
-    const accounts = await TaiKhoan.find();
-    res.json(accounts);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+// START SERVER
+// ==================================================
+app.listen(PORT, () => {
+  console.log(`🚀 Backend server running on port ${PORT}`);
+  console.log(`📝 Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
+  console.log(`🔗 Health Check: http://localhost:${PORT}/api/health`);
 });
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err) => {
+  console.log("❌ Unhandled Promise Rejection:", err.message);
+  process.exit(1);
+});
+
+// Handle uncaught exceptions
+process.on("uncaughtException", (err) => {
+  console.log("❌ Uncaught Exception:", err.message);
+  process.exit(1);
+});
+
+export default app;

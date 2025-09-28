@@ -5,8 +5,6 @@
 // Cấu hình routing, context providers, và layout chính
 
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-// Import styles
 import "./styles/App.css";
 
 import Sidebar from "./components/common/Sidebar";
@@ -29,5 +27,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
