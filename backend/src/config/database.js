@@ -10,7 +10,7 @@ const connectDB = async () => {
   try {
     // Lấy connection string từ environment variables
     const mongoURI =
-      process.env.MONGODB_URI || "mongodb://localhost:27017/remn_project";
+      process.env.MONGODB_URI || "mongodb://localhost:27017/remn";
 
     // Cấu hình connection options
     const options = {
