@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pencil, Trash2, Lock } from "lucide-react";
+import { Pencil, Trash2, Lock, X } from "lucide-react";
 import { taiKhoanAPI } from "../../services/taiKhoanAPI";
 
 export default function UserTable() {
@@ -11,6 +11,18 @@ export default function UserTable() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // State cho form thêm user
+  const [formData, setFormData] = useState({
+    TenDangNhap: "",
+    HoTen: "",
+    Email: "",
+    VaiTro: "User",
+    TrangThai: "active",
+    MatKhau: ""
+  });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState("");
 
   // gọi API khi component mount
   useEffect(() => {
@@ -47,6 +59,94 @@ export default function UserTable() {
   const handleAddUser = (e) => {
     e.preventDefault();
     setIsModalOpen(false);
+  };
+
+  // Reset form khi đóng modal
+  const resetForm = () => {
+    setFormData({
+      TenDangNhap: "",
+      HoTen: "",
+      Email: "",
+      VaiTro: "User", 
+      TrangThai: "active",
+      MatKhau: ""
+    });
+    setFormError("");
+  };
+
+  // Xử lý thay đổi input
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Validate form client-side
+  const validateForm = () => {
+    const { TenDangNhap, HoTen, Email, MatKhau } = formData;
+    
+    if (!TenDangNhap.trim()) return "Tên đăng nhập không được để trống";
+    if (!HoTen.trim()) return "Họ tên không được để trống";
+    if (!Email.trim()) return "Email không được để trống";
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(Email)) return "Email không đúng định dạng";
+    
+    // Validate password (nếu có nhập)
+    if (MatKhau && MatKhau.length < 6) return "Mật khẩu phải có ít nhất 6 ký tự";
+    
+    return null;
+  };
+
+  // Xử lý submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate client-side
+    const validationError = validateForm();
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
+
+    try {
+      setFormLoading(true);
+      setFormError("");
+      
+      console.log("🚀 Đang gửi request tạo user:", formData);
+      
+      // Gọi API tạo user mới
+      const newUser = await taiKhoanAPI.create(formData);
+      
+      // Cập nhật bảng - thêm user mới vào đầu danh sách
+      setRows(prev => [newUser, ...prev]);
+      
+      // Đóng modal và reset form
+      setIsModalOpen(false);
+      resetForm();
+      
+      // Toast thành công (có thể thêm toast library sau)
+      console.log("✅ Thêm user thành công:", newUser);
+      
+    } catch (error) {
+      console.error("❌ Lỗi khi thêm user:", error);
+      
+      // Hiển thị lỗi cụ thể từ backend
+      if (error.status === 409) {
+        setFormError("Tên đăng nhập hoặc email đã tồn tại");
+      } else if (error.status === 400) {
+        setFormError(error.message || "Dữ liệu không hợp lệ");
+      } else if (error.status === 403) {
+        setFormError("Bạn không có quyền thực hiện hành động này");
+      } else {
+        setFormError("Có lỗi xảy ra khi thêm user. Vui lòng thử lại.");
+      }
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   if (loading) return <div className="p-4">⏳ Đang tải dữ liệu...</div>;
@@ -157,11 +257,164 @@ export default function UserTable() {
         </table>
       </div>
 
-      {/* Modal (giữ nguyên như cũ) */}
+      {/* Modal thêm user */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            {/* ... form thêm user ... */}
+          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            {/* Header modal */}
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Thêm tài khoản mới
+              </h3>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  resetForm();
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Form thêm user */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Tên đăng nhập */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tên đăng nhập <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="TenDangNhap"
+                  value={formData.TenDangNhap}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Nhập tên đăng nhập"
+                  required
+                />
+              </div>
+
+              {/* Họ tên */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Họ và tên <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="HoTen"
+                  value={formData.HoTen}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Nhập họ và tên"
+                  required
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="Email"
+                  value={formData.Email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Nhập email"
+                  required
+                />
+              </div>
+
+              {/* Vai trò */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Vai trò
+                </label>
+                <select
+                  name="VaiTro"
+                  value={formData.VaiTro}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="User">User</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Technician">Technician</option>
+                </select>
+              </div>
+
+              {/* Trạng thái */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Trạng thái
+                </label>
+                <select
+                  name="TrangThai"
+                  value={formData.TrangThai}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="active">Active</option>
+                  <option value="locked">Locked</option>
+                  <option value="banned">Banned</option>
+                </select>
+              </div>
+
+              {/* Mật khẩu */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mật khẩu 
+                  <span className="text-gray-500 text-xs ml-2">
+                    (Để trống để hệ thống tự tạo)
+                  </span>
+                </label>
+                <input
+                  type="password"
+                  name="MatKhau"
+                  value={formData.MatKhau}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Nhập mật khẩu (tùy chọn)"
+                />
+              </div>
+
+              {/* Hiển thị lỗi */}
+              {formError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-sm">
+                  {formError}
+                </div>
+              )}
+
+              {/* Nút submit */}
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    resetForm();
+                  }}
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  disabled={formLoading}
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {formLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Đang lưu...
+                    </>
+                  ) : (
+                    "Thêm tài khoản"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
