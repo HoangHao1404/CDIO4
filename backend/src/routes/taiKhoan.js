@@ -143,12 +143,18 @@ router.patch("/:id/status", async (req, res) => {
         TrangThai: "active",
       });
       if (adminCount <= 1) {
-        return res.status(403).json({ message: "Không thể khóa admin cuối cùng" });
+        return res
+          .status(403)
+          .json({ message: "Không thể khóa admin cuối cùng" });
       }
     }
 
     // Cập nhật trạng thái
-    const updated = await TaiKhoan.findByIdAndUpdate(id, { TrangThai }, { new: true });
+    const updated = await TaiKhoan.findByIdAndUpdate(
+      id,
+      { TrangThai },
+      { new: true }
+    );
     res.json({ user: updated });
   } catch (err) {
     console.error("❌ Lỗi khi cập nhật trạng thái:", err);
@@ -196,7 +202,9 @@ router.patch("/:id", async (req, res) => {
     // ...
 
     // Cập nhật DB
-    const updated = await TaiKhoan.findByIdAndUpdate(id, updateFields, { new: true });
+    const updated = await TaiKhoan.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
     if (!updated) {
       return res.status(404).json({ message: "Tài khoản không tồn tại" });
     }
@@ -208,8 +216,8 @@ router.patch("/:id", async (req, res) => {
         Email: updated.Email,
         VaiTro: updated.VaiTro,
         TrangThai: updated.TrangThai,
-        NgayTao: updated.NgayTao
-      }
+        NgayTao: updated.NgayTao,
+      },
     });
   } catch (err) {
     console.error("❌ Lỗi khi cập nhật tài khoản:", err);
