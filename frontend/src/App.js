@@ -19,7 +19,6 @@ import Public_page from "./pages/Public_page";
 
 function App() {
   return (
-    <BrowserRouter>
       <Routes>
         {/* Trang public */}
           <Route path="/" element={<Public_page />} />
@@ -43,7 +42,6 @@ function App() {
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
   );
 }
 export default App;

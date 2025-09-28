@@ -10,16 +10,19 @@ import "./index.css";
 import App from "./App";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext"
+import { BrowserRouter } from "react-router-dom";
 
 // Create root element và render App
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
+    <BrowserRouter>
     <AuthProvider>
       <ThemeProvider>
         <App />
       </ThemeProvider>
     </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

@@ -711,3 +711,5 @@ export const Public_page = () => {
     </div>
   );
 };
+
+export default Public_page;
