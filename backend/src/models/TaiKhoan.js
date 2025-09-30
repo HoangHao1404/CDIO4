@@ -38,7 +38,7 @@ const taiKhoanSchema = new mongoose.Schema(
     },
     VaiTro: {
       type: [String],
-      default: ["khachhang"],
+      default: ["User"],
     },
     TrangThai: {
       type: String,
