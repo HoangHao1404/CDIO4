@@ -6,7 +6,7 @@
 
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import User from "../models/TaiKhoan.js";
 
 // ==================================================
 // HELPER FUNCTIONS

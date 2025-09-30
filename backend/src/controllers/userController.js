@@ -4,7 +4,7 @@
 // Chứa các hàm xử lý CRUD operations cho users
 
 import { validationResult } from "express-validator";
-import User from "../models/User.js";
+import User from "../models/TaiKhoan.js";
 
 // ==================================================
 // CONTROLLER FUNCTIONS
