@@ -3,7 +3,7 @@ import { ArrowUpRight } from "phosphor-react";
 
 const CardData = () => {
   return (
-    <div className="min-w-[160px] flex-1 h-[160px] p-3 bg-white flex flex-col justify-between gap-3 rounded-[20px] shadow-lg">
+    <div className="min-w-[160px] flex-1 h-[140px] p-3 bg-white flex flex-col justify-between gap-3 rounded-[20px] shadow-lg">
       {/* title + detail*/}
       <div className="w-full flex justify-between items-center">
         <p className="text-xl font-semibold text-[#969696]">CO₂</p>

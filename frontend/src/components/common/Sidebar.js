@@ -51,7 +51,7 @@ const Sidebar = () => {
     <div className="fixed left-[-10px] top-0 h-screen w-[250px] flex items-start justify-start p-7 z-30">
       <div className="relative">
         <aside
-          className={`w-[216px] h-[755px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
+          className={`w-[216px] h-[700px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
           ${theme === "light" ? "bg-white text-black" : "bg-zinc-900 text-zinc-200"}`}
         >
           {/* Logo */}

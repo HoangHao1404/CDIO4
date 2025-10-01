@@ -15,7 +15,7 @@ const QualityChart = () => {
   const mainLabel = "Không lành mạnh";
 
   return (
-    <div className="w-full h-[400px] relative flex flex-col justify-center">
+    <div className="w-full h-[350px] relative flex flex-col justify-center">
       <ResponsiveContainer>
         <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <Pie

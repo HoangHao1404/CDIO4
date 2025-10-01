@@ -34,8 +34,8 @@ const Setting = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col justify-center p-8 pb-10">
-      <div className="flex flex-col gap-[20px] justify-center">
+    <div className="h-full flex flex-col justify-top p-8 pb-10">
+      <div className="flex flex-col gap-[20px] justify-top">
         {settingItems.map((item) => (
           <SettingCard key={item.id} item={item} theme={theme} />
         ))}
