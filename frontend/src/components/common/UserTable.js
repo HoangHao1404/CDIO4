@@ -54,14 +54,19 @@ export default function UserTable() {
   }, []);
 
   // lọc dữ liệu
-  const filteredUsers = rows.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase());
-    const matchesRole = roleFilter === "all" || user.role === roleFilter;
-    const matchesStatus =
-      statusFilter === "all" || user.status === statusFilter;
-    return matchesSearch && matchesRole && matchesStatus;
+  const filteredRows = rows.filter((user) => {
+    // Bảo vệ các trường có thể undefined
+    const name = user.name || "";
+    const email = user.email || "";
+    const role = user.role || "";
+    const status = user.status || "";
+
+    return (
+      name.toLowerCase().includes(search.toLowerCase()) ||
+      email.toLowerCase().includes(search.toLowerCase()) ||
+      role.toLowerCase().includes(search.toLowerCase()) ||
+      status.toLowerCase().includes(search.toLowerCase())
+    );
   });
 
   const statusColor = {
@@ -250,7 +255,9 @@ export default function UserTable() {
                 ...user,
                 name: updatedUser.HoTen,
                 email: updatedUser.Email,
-                role: Array.isArray(updatedUser.VaiTro) ? updatedUser.VaiTro[0] : updatedUser.VaiTro,
+                role: Array.isArray(updatedUser.VaiTro)
+                  ? updatedUser.VaiTro[0]
+                  : updatedUser.VaiTro,
                 status: updatedUser.TrangThai,
               }
             : user
@@ -327,7 +334,7 @@ export default function UserTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
+            {filteredRows.map((user) => (
               <tr key={user.id} className="border-t">
                 <td className="p-3 italic">{user.id}</td>
                 <td className="p-3 font-medium">{user.name}</td>
@@ -358,7 +365,9 @@ export default function UserTable() {
                     }
                     onClick={() => {
                       setLockId(user.id);
-                      setNextStatus(user.status === "active" ? "locked" : "active");
+                      setNextStatus(
+                        user.status === "active" ? "locked" : "active"
+                      );
                     }}
                     disabled={lockLoading}
                   >
@@ -375,7 +384,7 @@ export default function UserTable() {
                 </td>
               </tr>
             ))}
-            {!filteredUsers.length && (
+            {!filteredRows.length && (
               <tr>
                 <td colSpan={6} className="p-4 text-center text-gray-500">
                   Không có dữ liệu phù hợp
