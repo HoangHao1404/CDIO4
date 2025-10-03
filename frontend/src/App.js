@@ -21,7 +21,7 @@ function App() {
   return (
       <Routes>
         {/* Trang public */}
-          <Route path="/" element={<Public_page />} />
+          <Route path="public" element={<Public_page />} />
 
           {/* Auth */}
           <Route path="/signin" element={<SignIn />} />
