@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
   try {
     const users = await TaiKhoan.find(
       {},
-      "_id TenDangNhap Email VaiTro TrangThai"
+      "_id TenDangNhap HoTen Email VaiTro TrangThai" // THÊM HoTen vào đây
     ).lean();
     res.json(users);
   } catch (e) {
@@ -212,7 +212,7 @@ router.patch("/:id", async (req, res) => {
       user: {
         _id: updated._id,
         TenDangNhap: updated.TenDangNhap,
-        HoTen: updated.HoTen,
+        HoTen: updated.HoTen || updated.TenDangNhap, // FALLBACK nếu HoTen null
         Email: updated.Email,
         VaiTro: updated.VaiTro,
         TrangThai: updated.TrangThai,

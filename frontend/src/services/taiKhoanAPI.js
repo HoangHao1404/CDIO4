@@ -8,11 +8,9 @@ const api = axios.create({
 export const taiKhoanAPI = {
   async getAll() {
     const res = await api.get("/taikhoan"); 
-    // 👉 vì baseURL đã là http://localhost:5000/api
-    // nên chỗ này chỉ cần "/taikhoan"
     return res.data.map(u => ({
       id: u._id,
-      name: u.TenDangNhap,
+      name: u.HoTen || u.TenDangNhap, // ƯU TIÊN HoTen, fallback TenDangNhap
       email: u.Email,
       role: Array.isArray(u.VaiTro) ? u.VaiTro[0] : u.VaiTro,
       status: (u.TrangThai || "").toLowerCase(),
@@ -25,7 +23,7 @@ export const taiKhoanAPI = {
       const newUser = res.data.user || res.data;
       return {
         id: newUser._id,
-        name: newUser.TenDangNhap,
+        name: newUser.HoTen || newUser.TenDangNhap, // FALLBACK tương tự
         email: newUser.Email,
         role: Array.isArray(newUser.VaiTro) ? newUser.VaiTro[0] : newUser.VaiTro,
         status: (newUser.TrangThai || "").toLowerCase(),
