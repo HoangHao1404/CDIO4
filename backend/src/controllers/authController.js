@@ -1,6 +1,6 @@
-import { validationResult } from "express-validator";
-import jwt from "jsonwebtoken";
-import User from "../models/TaiKhoan.js";
+const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const TaiKhoan = require("../models/TaiKhoan");
 
 const COOKIE_NAME = process.env.COOKIE_NAME || "token";
 
@@ -39,7 +39,7 @@ const sendAuth = (user, res, status = 200, message = "Success") => {
 };
 
 // @route POST /api/auth/register
-export const register = async (req, res, next) => {
+const register = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -98,7 +98,7 @@ export const register = async (req, res, next) => {
   }
 };
 
-export const login = async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -127,7 +127,7 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const getProfile = async (req, res, next) => {
+const getProfile = async (req, res, next) => {
   try {
     const user = await TaiKhoan.findById(req.user.id);
     if (!user)
@@ -141,7 +141,7 @@ export const getProfile = async (req, res, next) => {
   }
 };
 
-export const logout = async (_req, res, next) => {
+const logout = async (_req, res, next) => {
   try {
     const isProd = String(process.env.COOKIE_SECURE).toLowerCase() === "true";
     res.clearCookie(COOKIE_NAME, {
@@ -154,4 +154,11 @@ export const logout = async (_req, res, next) => {
     console.error("❌ Logout error:", err);
     next(err);
   }
+};
+
+module.exports = {
+  register,
+  login,
+  getProfile,
+  logout,
 };
