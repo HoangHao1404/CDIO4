@@ -10,10 +10,12 @@ import icon6 from "../image/icon6.png";
 import anh1 from "../image/anh1.png";
 import anh2 from "../image/anh2.png";
 import anh3 from "../image/anh3.png";
+import { useNavigate } from "react-router-dom";
 
 export const Public_page = () => {
   // Thêm state để theo dõi active item
   const [activeItem, setActiveItem] = useState("home");
+  const navigate = useNavigate();
 
   // Thay đổi useEffect để tối ưu scroll handler
   useEffect(() => {
@@ -162,12 +164,13 @@ export const Public_page = () => {
             Xây dựng được một hệ thống giúp kiểm soát được chất lượng không khí
             trong không gian sinh hoạt, giúp đảm bảo sức khỏe,...
           </p>
-          <a
-            href="#"
+          <button
+            onClick={() => navigate("/signin")}
             className="inline-block bg-black text-white font-semibold rounded-full px-8 py-3 shadow-lg hover:brightness-90 transition"
+            type="button"
           >
             Bắt đầu
-          </a>
+          </button>
         </div>
       </section>
 
@@ -563,9 +566,7 @@ export const Public_page = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-8 rounded-xl border hover:shadow-xl transition">
               <h3 className="text-xl font-bold mb-4">Cơ bản</h3>
-              <div className="text-4xl font-bold mb-6">
-                2,000,000đ<span className="text-base font-normal">/tháng</span>
-              </div>
+              <div className="text-4xl font-bold mb-6">2,000,000đ</div>
               <ul className="space-y-3 mb-8">
                 <li>✓ 2 thiết bị cảm biến</li>
                 <li>✓ Báo cáo cơ bản</li>
@@ -582,9 +583,7 @@ export const Public_page = () => {
                 Phổ biến
               </div>
               <h3 className="text-xl font-bold mb-4">Nâng cao</h3>
-              <div className="text-4xl font-bold mb-6">
-                3,500,000đ<span className="text-base font-normal">/tháng</span>
-              </div>
+              <div className="text-4xl font-bold mb-6">3,500,000đ</div>
               <ul className="space-y-3 mb-8">
                 <li>✓ 5 thiết bị cảm biến</li>
                 <li>✓ Báo cáo chi tiết</li>

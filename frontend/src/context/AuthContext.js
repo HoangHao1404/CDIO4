@@ -1,210 +1,136 @@
 // ==================================================
 // AUTH CONTEXT - QUẢN LÝ TRẠNG THÁI AUTHENTICATION
 // ==================================================
-// Context để chia sẻ thông tin user và auth state trong toàn bộ app
-// Sử dụng React Context API
-
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import * as authAPI from "../services/authAPI";
 
-// Tạo Auth Context
 const AuthContext = createContext();
 
-// ==================================================
-// AUTH REDUCER - QUẢN LÝ STATE CHANGES
-// ==================================================
 const authReducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN_START":
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
-
-    case "LOGIN_SUCCESS":
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: true,
-        user: action.payload.user,
-        token: action.payload.token,
-        error: null,
-      };
-
-    case "LOGIN_FAILURE":
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: false,
-        user: null,
-        token: null,
-        error: action.payload,
-      };
-
-    case "LOGOUT":
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: null,
-        token: null,
-        error: null,
-      };
-
+    case "LOADING":
+      return { ...state, loading: true, error: null };
     case "LOAD_USER":
       return {
         ...state,
         loading: false,
         isAuthenticated: true,
         user: action.payload,
-      };
-
-    case "CLEAR_ERROR":
-      return {
-        ...state,
         error: null,
       };
-
+    case "LOGIN_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: true,
+        user: action.payload,
+        error: null,
+      };
+    case "LOGOUT":
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+        loading: false,
+        error: null,
+      };
+    case "ERROR":
+      return { ...state, loading: false, error: action.payload };
+    case "CLEAR_ERROR":
+      return { ...state, error: null };
+    case "LOGIN_FAILURE":
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
 };
 
-// ==================================================
-// INITIAL STATE
-// ==================================================
 const initialState = {
   isAuthenticated: false,
   user: null,
-  token: localStorage.getItem("token"),
   loading: true,
   error: null,
 };
 
-// ==================================================
-// AUTH PROVIDER COMPONENT
-// ==================================================
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // ==================================================
-  // LOAD USER WHEN APP STARTS
-  // ==================================================
+  // Khi app load: thử lấy profile từ cookie JWT
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      loadUser();
-    } else {
-      dispatch({ type: "LOGIN_FAILURE", payload: "No token found" });
-    }
+    const load = async () => {
+      try {
+        const res = await authAPI.getProfile();
+        // BE trả { success, data: { user } }
+        dispatch({ type: "LOAD_USER", payload: res.data.data.user });
+      } catch {
+        dispatch({ type: "ERROR", payload: null }); // không lỗi to; coi như chưa đăng nhập
+      }
+    };
+    load();
   }, []);
 
-  // ==================================================
-  // ACTION FUNCTIONS
-  // ==================================================
-
-  // Load user profile
-  const loadUser = async () => {
-    try {
-      const response = await authAPI.getProfile();
-      dispatch({ type: "LOAD_USER", payload: response.data.user });
-    } catch (error) {
-      dispatch({ type: "LOGIN_FAILURE", payload: error.message });
-      localStorage.removeItem("token");
-    }
-  };
-
-  // Login user
   const login = async (email, password) => {
-    dispatch({ type: "LOGIN_START" });
-
+    dispatch({ type: "LOADING" });
     try {
-      const response = await authAPI.login({ email, password });
-
-      // Lưu token vào localStorage
-      localStorage.setItem("token", response.data.token);
-
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: {
-          user: response.data.user,
-          token: response.data.token,
-        },
-      });
-
+      const res = await authAPI.login({ email, password });
+      // BE trả { success, message, data: { user, token } } và cookie HttpOnly
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data.data.user });
       return { success: true };
     } catch (error) {
-      dispatch({
-        type: "LOGIN_FAILURE",
-        payload: error.response?.data?.error?.message || "Login failed",
-      });
-      return { success: false, error: error.response?.data?.error?.message };
+      const msg =
+        error?.response?.data?.error?.message ||
+        error?.response?.data?.message ||
+        "Login failed";
+      dispatch({ type: "LOGIN_FAILURE", payload: msg });
+      // dispatch({ type: "ERROR", payload: msg });
+      return { success: false, error: msg };
     }
   };
 
-  // Register user
+  // Register KHÔNG auto-login (theo yêu cầu). FE sẽ điều hướng sang /signin.
   const register = async (userData) => {
-    dispatch({ type: "LOGIN_START" });
-
+    dispatch({ type: "LOADING" });
     try {
-      const response = await authAPI.register(userData);
-
-      // Lưu token vào localStorage
-      localStorage.setItem("token", response.data.token);
-
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: {
-          user: response.data.user,
-          token: response.data.token,
-        },
-      });
-
+      await authAPI.register(userData);
+      dispatch({ type: "ERROR", payload: null });
       return { success: true };
     } catch (error) {
-      dispatch({
-        type: "LOGIN_FAILURE",
-        payload: error.response?.data?.error?.message || "Registration failed",
-      });
-      return { success: false, error: error.response?.data?.error?.message };
+      const msg =
+        error?.response?.data?.error?.message ||
+        error?.response?.data?.message ||
+        "Registration failed";
+      dispatch({ type: "ERROR", payload: msg });
+      return { success: false, error: msg };
     }
   };
 
-  // Logout user
-  const logout = () => {
-    localStorage.removeItem("token");
-    dispatch({ type: "LOGOUT" });
+  const logout = async () => {
+    try {
+      await authAPI.logout();
+    } finally {
+      dispatch({ type: "LOGOUT" });
+    }
   };
 
-  // Clear error
-  const clearError = () => {
-    dispatch({ type: "CLEAR_ERROR" });
-  };
+  const clearError = () => dispatch({ type: "CLEAR_ERROR" });
 
-  // ==================================================
-  // CONTEXT VALUE
-  // ==================================================
-  const value = {
-    ...state,
-    login,
-    register,
-    logout,
-    loadUser,
-    clearError,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        ...state,
+        login,
+        register,
+        logout,
+        clearError,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-// ==================================================
-// CUSTOM HOOK TO USE AUTH CONTEXT
-// ==================================================
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  return ctx;
 };

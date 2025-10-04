@@ -249,3 +249,5 @@ export default function DeviceTable() {
     </div>
   );
 }
+
+

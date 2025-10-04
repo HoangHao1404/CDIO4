@@ -26,7 +26,7 @@ const Avatar = ({ src, alt }) => (
     src={src}
     alt={alt}
     className="h-8 w-8 rounded-full object-cover ring-1 ring-black/5"
-    onError={(e) => (e.target.style.display = "none")}
+    onError={(e) => (e.currentTarget.style.display = "none")}
   />
 );
 
