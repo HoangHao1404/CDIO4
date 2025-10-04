@@ -1,97 +1,52 @@
 // ==================================================
 // API SERVICE FOR AUTHENTICATION
 // ==================================================
-// Tất cả các API calls liên quan đến authentication
-// Sử dụng axios để gọi backend APIs
-
 import axios from "axios";
 
-// Base URL cho API (được proxy trong package.json)
-const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";
+// Ưu tiên env, fallback localhost:5001/api
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE ||
+  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE) ||
+  "http://localhost:5001/api";
 
-// ==================================================
-// AXIOS INSTANCE CONFIGURATION
-// ==================================================
+// Axios instance (QUAN TRỌNG: withCredentials để gửi/nhận cookie JWT)
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" },
 });
 
-// Request interceptor - Thêm token vào mọi request
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
+// (Optional) Nếu sau này mày muốn thêm Bearer token thủ công
+// thì bật lại đoạn dưới. Hiện tại ta DÙNG COOKIE nên không cần.
+/*
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+*/
+
+// Response interceptor - Xử lý lỗi chung
+// KHÔNG redirect ở đây, để AuthContext xử lý
+api.interceptors.response.use(
+  (res) => res,
   (error) => Promise.reject(error)
 );
 
-// Response interceptor - Xử lý lỗi chung
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Nếu token hết hạn, redirect về login
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
-
 // ==================================================
-// AUTH API FUNCTIONS
+// AUTH API
 // ==================================================
+export const register = (userData) => api.post("/auth/register", userData);
+export const login = (credentials) => api.post("/auth/login", credentials);
+export const getProfile = () => api.get("/auth/me");
+export const logout = () => api.post("/auth/logout");
 
-// Register new user
-export const register = async (userData) => {
-  const response = await api.post("/auth/register", userData);
-  return response;
-};
-
-// Login user
-export const login = async (credentials) => {
-  const response = await api.post("/auth/login", credentials);
-  return response;
-};
-
-// Get user profile
-export const getProfile = async () => {
-  const response = await api.get("/auth/me");
-  return response;
-};
-
-// Logout user
-export const logout = async () => {
-  const response = await api.post("/auth/logout");
-  return response;
-};
-
-// ==================================================
-// ADDITIONAL AUTH FUNCTIONS (implement sau nếu cần)
-// ==================================================
-
-// Forgot password
-export const forgotPassword = async (email) => {
-  const response = await api.post("/auth/forgot-password", { email });
-  return response;
-};
-
-// Reset password
-export const resetPassword = async (token, password) => {
-  const response = await api.put(`/auth/reset-password/${token}`, { password });
-  return response;
-};
-
-// Update password
-export const updatePassword = async (passwords) => {
-  const response = await api.put("/auth/update-password", passwords);
-  return response;
-};
+// (chưa dùng) Forgot/Reset/Update password
+export const forgotPassword = (email) =>
+  api.post("/auth/forgot-password", { email });
+export const resetPassword = (token, password) =>
+  api.put(`/auth/reset-password/${token}`, { password });
+export const updatePassword = (passwords) =>
+  api.put("/auth/update-password", passwords);
 
 export default api;

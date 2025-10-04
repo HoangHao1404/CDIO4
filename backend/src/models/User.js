@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema(
 
     // Loại bỏ __v field khi convert to JSON
     toJSON: {
-      transform: function (doc, ret) {
+      transform: function (_doc, ret) {
         delete ret.__v;
         delete ret.password; // Đảm bảo không bao giờ trả password
         return ret;
@@ -130,10 +130,10 @@ userSchema.statics.findByEmail = function (email) {
 // ==================================================
 // INDEXES - TỐI ƯU PERFORMANCE
 // ==================================================
-userSchema.index({ email: 1 }); // Index cho email lookup
+userSchema.index({ email: 1 }, { unique: true }); // Index cho email lookup
 userSchema.index({ createdAt: -1 }); // Index cho sort by creation date
 userSchema.index({ isActive: 1 }); // Index cho filter active users
 
-// Export model sử dụng CommonJS
+// Export model với CommonJS
 const User = mongoose.model("User", userSchema);
 module.exports = User;

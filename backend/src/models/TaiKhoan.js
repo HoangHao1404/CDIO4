@@ -1,16 +1,95 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const TaiKhoanSchema = new Schema(
+// Hàm tạo ID tự động dạng TK1, TK2,...
+async function generateNextTaiKhoanId() {
+  const last = await mongoose
+    .model("TaiKhoan")
+    .findOne({})
+    .sort({ _id: -1 })
+    .collation({ locale: "en", numericOrdering: true });
+
+  if (!last || !last._id?.startsWith("TK")) return "TK1";
+
+  const num = parseInt(last._id.slice(2)) + 1;
+  return `TK${num}`;
+}
+
+const taiKhoanSchema = new mongoose.Schema(
   {
-    _id: String, // Cho phép _id là String
-    TenDangNhap: String,
-    HoTen: String,
-    Email: String,
-    VaiTro: [String],
-    TrangThai: String,
-    MatKhau: String,
-    NgayTao: Date,
+    _id: {
+      type: String,
+    },
+    TenDangNhap: {
+      type: String,
+      required: [true, "Tên đăng nhập là bắt buộc"],
+      unique: true,
+    },
+    HoTen: {
+      type: String,
+      default: "",
+    },
+    Email: {
+      type: String,
+      required: [true, "Email là bắt buộc"],
+      unique: true,
+      lowercase: true,
+    },
+    MatKhau: {
+      type: String,
+      required: [true, "Mật khẩu là bắt buộc"],
+      select: false,
+    },
+    VaiTro: {
+      type: [String],
+      default: ["User"],
+    },
+    TrangThai: {
+      type: String,
+      enum: ["active", "locked", "deleted"],
+      default: "active",
+    },
+    ID_KhachHang: {
+      type: String,
+      default: null,
+    },
+    NgayTao: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  { collection: "TaiKhoan" }
+  {
+    collection: "TaiKhoan",
+    toJSON: {
+      transform: function (_doc, ret) {
+        delete ret.__v;
+        delete ret.MatKhau;
+        return ret;
+      },
+    },
+  }
 );
-module.exports = model("TaiKhoan", TaiKhoanSchema);
+
+// Tự động gán ID dạng "TK1", "TK2",...
+taiKhoanSchema.pre("save", async function (next) {
+  if (!this._id) {
+    this._id = await generateNextTaiKhoanId();
+  }
+
+  if (!this.isModified("MatKhau")) return next();
+  const salt = await bcrypt.genSalt(12);
+  this.MatKhau = await bcrypt.hash(this.MatKhau, salt);
+  next();
+});
+
+// Phương thức so sánh mật khẩu
+taiKhoanSchema.methods.comparePassword = function (plain) {
+  return bcrypt.compare(plain, this.MatKhau);
+};
+
+// Tìm tài khoản theo email và bao gồm mật khẩu
+taiKhoanSchema.statics.findByEmail = function (email) {
+  return this.findOne({ Email: email }).select("+MatKhau");
+};
+
+module.exports = mongoose.model("TaiKhoan", taiKhoanSchema, "TaiKhoan");

@@ -5,7 +5,11 @@ import QualityChart from "../components/common/QualityChart";
 
 const Dashboard = () => {
   return (
+<<<<<<< HEAD
     <div>
+=======
+    <div className="mt-1">
+>>>>>>> origin/Tun
       <div className="w-full flex flex-nowrap gap-4">
         <CardData />
         <CardData />

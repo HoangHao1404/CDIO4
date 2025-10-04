@@ -1,9 +1,3 @@
-// ==================================================
-// MAIN APP COMPONENT
-// ==================================================
-// Component gốc chứa toàn bộ ứng dụng React
-// Cấu hình routing, context providers, và layout chính
-
 import React from "react";
 import "./styles/App.css";
 import Dashboard from "./pages/Dashboard";
