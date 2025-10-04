@@ -1,10 +1,6 @@
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
-<<<<<<< HEAD
 import User from "../models/TaiKhoan.js";
-=======
-import TaiKhoan from "../models/TaiKhoan.js";
->>>>>>> origin/Tun
 
 const COOKIE_NAME = process.env.COOKIE_NAME || "token";
 

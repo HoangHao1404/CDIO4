@@ -143,16 +143,11 @@
 // ==================================================
 // USER MODEL - MONGODB SCHEMA
 // ==================================================
-<<<<<<< HEAD
 // Định nghĩa cấu trúc dữ liệu cho User trong database
 // Sử dụng Mongoose Schema để validate và structure data
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-=======
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
->>>>>>> origin/Tun
 
 const userSchema = new mongoose.Schema(
   {
@@ -167,18 +162,13 @@ const userSchema = new mongoose.Schema(
       required: [true, "Vui lòng cung cấp email"],
       unique: true,
       lowercase: true,
-<<<<<<< HEAD
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         "Vui lòng cung cấp email hợp lệ",
       ],
-=======
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please provide a valid email"],
->>>>>>> origin/Tun
     },
     password: {
       type: String,
-<<<<<<< HEAD
       required: [true, "Vui lòng cung cấp mật khẩu"],
       minlength: [6, "Mật khẩu phải có ít nhất 6 ký tự"],
       select: false, // Không trả password khi query user
@@ -209,11 +199,6 @@ const userSchema = new mongoose.Schema(
 
     lastLogin: {
       type: Date,
-=======
-      required: [true, "Please provide a password"],
-      minlength: [6, "Password must be at least 6 characters"],
-      select: false,
->>>>>>> origin/Tun
     },
     avatar: { type: String, default: "" },
     role: { type: String, enum: ["user", "admin"], default: "user" },
@@ -263,9 +248,6 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ createdAt: -1 });
 userSchema.index({ isActive: 1 });
 
-<<<<<<< HEAD
 // Export model sử dụng CommonJS
-=======
->>>>>>> origin/Tun
 const User = mongoose.model("User", userSchema);
 module.exports = User;
