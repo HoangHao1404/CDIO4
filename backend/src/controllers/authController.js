@@ -19,7 +19,7 @@ const setAuthCookie = (res, token) => {
   });
 };
 
-const sendAuth = (user, res, status = 200, message = "Success") => {
+const sendAuth = (user, res, status = 200, message = "Thành công") => {
   const token = signJwt({ userId: user._id, role: user.VaiTro });
   setAuthCookie(res, token);
   res.status(status).json({
@@ -45,7 +45,7 @@ export const register = async (req, res, next) => {
     if (!errors.isEmpty())
       return res.status(400).json({
         success: false,
-        error: { message: "Validation failed", details: errors.array() },
+        error: { message: "Xác thực thất bại", details: errors.array() },
       });
 
     const { name, email, password } = req.body;
@@ -55,7 +55,7 @@ export const register = async (req, res, next) => {
     if (existed)
       return res
         .status(400)
-        .json({ success: false, error: { message: "Email already exists" } });
+        .json({ success: false, error: { message: "Email đã tồn tại" } });
 
     // 2. Tìm _id lớn nhất hiện tại theo format TK<number>
     const latestAccount = await TaiKhoan.findOne({ _id: /^TK\d+$/ })
@@ -90,10 +90,10 @@ export const register = async (req, res, next) => {
 
     return res.status(201).json({
       success: true,
-      message: "User registered successfully. Please sign in.",
+      message: "Đăng ký tài khoản thành công. Vui lòng đăng nhập.",
     });
   } catch (err) {
-    console.error("❌ Register error:", err);
+    console.error("❌ Lỗi đăng ký:", err);
     next(err);
   }
 };
@@ -104,7 +104,7 @@ export const login = async (req, res, next) => {
     if (!errors.isEmpty())
       return res.status(400).json({
         success: false,
-        error: { message: "Validation failed", details: errors.array() },
+        error: { message: "Xác thực thất bại", details: errors.array() },
       });
 
     const { email, password } = req.body;
@@ -112,17 +112,23 @@ export const login = async (req, res, next) => {
     if (!user)
       return res
         .status(401)
-        .json({ success: false, error: { message: "Invalid credentials" } });
+        .json({
+          success: false,
+          error: { message: "Thông tin đăng nhập không hợp lệ" },
+        });
 
     const ok = await user.comparePassword(password);
     if (!ok)
       return res
         .status(401)
-        .json({ success: false, error: { message: "Invalid credentials" } });
+        .json({
+          success: false,
+          error: { message: "Thông tin đăng nhập không hợp lệ" },
+        });
 
-    return sendAuth(user, res, 200, "Login successful");
+    return sendAuth(user, res, 200, "Đăng nhập thành công");
   } catch (err) {
-    console.error("❌ Login error:", err);
+    console.error("❌ Lỗi đăng nhập:", err);
     next(err);
   }
 };
@@ -133,10 +139,13 @@ export const getProfile = async (req, res, next) => {
     if (!user)
       return res
         .status(404)
-        .json({ success: false, error: { message: "User not found" } });
+        .json({
+          success: false,
+          error: { message: "Không tìm thấy người dùng" },
+        });
     res.status(200).json({ success: true, data: { user } });
   } catch (err) {
-    console.error("❌ Get profile error:", err);
+    console.error("❌ Lỗi lấy thông tin profile:", err);
     next(err);
   }
 };
@@ -149,9 +158,9 @@ export const logout = async (_req, res, next) => {
       sameSite: isProd ? "none" : "lax",
       secure: isProd,
     });
-    res.status(200).json({ success: true, message: "Logged out successfully" });
+    res.status(200).json({ success: true, message: "Đăng xuất thành công" });
   } catch (err) {
-    console.error("❌ Logout error:", err);
+    console.error("❌ Lỗi đăng xuất:", err);
     next(err);
   }
 };

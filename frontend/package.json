@@ -8,12 +8,8 @@
     "phosphor-react": "^1.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-<<<<<<< HEAD
-    "react-router-dom": "^6.15.0",
-=======
     "react-icons": "^5.5.0",
-    "react-router-dom": "^6.30.1",
->>>>>>> origin/Tun
+    "react-router-dom": "^6.15.0",
     "react-scripts": "^5.0.1",
     "recharts": "^3.2.1"
   },

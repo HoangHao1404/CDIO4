@@ -1,136 +1,187 @@
-// ==================================================
-// AUTH CONTEXT - QUẢN LÝ TRẠNG THÁI AUTHENTICATION
-// ==================================================
-import React, { createContext, useContext, useReducer, useEffect } from "react";
-import * as authAPI from "../services/authAPI";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case "LOADING":
-      return { ...state, loading: true, error: null };
-    case "LOAD_USER":
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: true,
-        user: action.payload,
-        error: null,
-      };
-    case "LOGIN_SUCCESS":
-      return {
-        ...state,
-        loading: false,
-        isAuthenticated: true,
-        user: action.payload,
-        error: null,
-      };
-    case "LOGOUT":
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: null,
-        loading: false,
-        error: null,
-      };
-    case "ERROR":
-      return { ...state, loading: false, error: action.payload };
-    case "CLEAR_ERROR":
-      return { ...state, error: null };
-    case "LOGIN_FAILURE":
-      return { ...state, loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
+// Cấu hình axios theo hướng dẫn dự án - đọc từ .env
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5001/api",
+  withCredentials: true,
+  timeout: 10000,
+});
 
-const initialState = {
-  isAuthenticated: false,
-  user: null,
-  loading: true,
-  error: null,
-};
+// Interceptor debug theo quy chuẩn tiếng Việt
+api.interceptors.request.use(
+  (config) => {
+    console.log(`🚀 Gọi API: ${config.method?.toUpperCase()} ${config.url}`);
+    console.log(`📤 Dữ liệu gửi:`, config.data);
+    return config;
+  },
+  (error) => {
+    console.error("❌ Lỗi yêu cầu:", error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    console.log(`✅ Phản hồi thành công:`, response.data);
+    return response;
+  },
+  (error) => {
+    console.error("❌ Lỗi phản hồi:", error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
 
 export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [error, setError] = useState("");
 
-  // Khi app load: thử lấy profile từ cookie JWT
+  // Kiểm tra xác thực từ localStorage khi app khởi động
   useEffect(() => {
-    const load = async () => {
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    if (token && userData) {
       try {
-        const res = await authAPI.getProfile();
-        // BE trả { success, data: { user } }
-        dispatch({ type: "LOAD_USER", payload: res.data.data.user });
-      } catch {
-        dispatch({ type: "ERROR", payload: null }); // không lỗi to; coi như chưa đăng nhập
+        setUser(JSON.parse(userData));
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("❌ Lỗi khi parse dữ liệu user:", error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
-    };
-    load();
+    }
+
+    setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
-    dispatch({ type: "LOADING" });
-    try {
-      const res = await authAPI.login({ email, password });
-      // BE trả { success, message, data: { user, token } } và cookie HttpOnly
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data.data.user });
-      return { success: true };
-    } catch (error) {
-      const msg =
-        error?.response?.data?.error?.message ||
-        error?.response?.data?.message ||
-        "Login failed";
-      dispatch({ type: "LOGIN_FAILURE", payload: msg });
-      // dispatch({ type: "ERROR", payload: msg });
-      return { success: false, error: msg };
-    }
-  };
-
-  // Register KHÔNG auto-login (theo yêu cầu). FE sẽ điều hướng sang /signin.
+  // Hàm đăng ký với error handling chi tiết
   const register = async (userData) => {
-    dispatch({ type: "LOADING" });
     try {
-      await authAPI.register(userData);
-      dispatch({ type: "ERROR", payload: null });
-      return { success: true };
+      setError("");
+      setLoading(true);
+
+      console.log("📝 Bắt đầu đăng ký với dữ liệu:", userData);
+
+      const response = await api.post("/auth/register", userData);
+
+      if (response.data.success) {
+        console.log("✅ Đăng ký thành công:", response.data.message);
+        return {
+          success: true,
+          message: response.data.message,
+        };
+      }
+
+      return {
+        success: false,
+        error: response.data.error || "Đăng ký thất bại",
+      };
     } catch (error) {
-      const msg =
-        error?.response?.data?.error?.message ||
-        error?.response?.data?.message ||
-        "Registration failed";
-      dispatch({ type: "ERROR", payload: msg });
-      return { success: false, error: msg };
-    }
-  };
+      console.error("❌ Chi tiết lỗi đăng ký:", {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
 
-  const logout = async () => {
-    try {
-      await authAPI.logout();
+      let errorMessage = "Đăng ký thất bại. Vui lòng thử lại.";
+
+      // Xử lý lỗi theo hướng dẫn dự án
+      if (error.code === "ERR_NETWORK" || error.code === "ECONNREFUSED") {
+        errorMessage =
+          "Không thể kết nối đến máy chủ. Vui lòng kiểm tra backend server có chạy trên port 5001 không.";
+      } else if (error.code === "ERR_FAILED") {
+        errorMessage = "Kết nối thất bại. Kiểm tra máy chủ backend và cấu hình CORS.";
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      }
+
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     } finally {
-      dispatch({ type: "LOGOUT" });
+      setLoading(false);
     }
   };
 
-  const clearError = () => dispatch({ type: "CLEAR_ERROR" });
+  // Hàm đăng nhập tương tự
+  const login = async (email, password) => {
+    try {
+      setError("");
+      setLoading(true);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        login,
-        register,
-        logout,
-        clearError,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+      console.log("🔐 Bắt đầu đăng nhập với email:", email);
+
+      const response = await api.post("/auth/login", { email, password });
+
+      if (response.data.success) {
+        const { token, data } = response.data;
+
+        // Lưu theo chuẩn dự án
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        setUser(data.user);
+        setIsAuthenticated(true);
+
+        console.log("✅ Đăng nhập thành công:", data.user.name);
+        return { success: true, user: data.user };
+      }
+
+      return {
+        success: false,
+        error: response.data.error || "Đăng nhập thất bại",
+      };
+    } catch (error) {
+      console.error("❌ Chi tiết lỗi đăng nhập:", error);
+
+      let errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
+      if (error.code === "ERR_NETWORK") {
+        errorMessage = "Không thể kết nối đến máy chủ. Kiểm tra backend server.";
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      }
+
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsAuthenticated(false);
+    setError("");
+    console.log("✅ Đăng xuất thành công");
+  };
+
+  const clearError = () => setError("");
+
+  const value = {
+    user,
+    loading,
+    isAuthenticated,
+    error,
+    register,
+    login,
+    logout,
+    clearError,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
-  return ctx;
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth phải được sử dụng trong AuthProvider");
+  }
+  return context;
 };
