@@ -57,7 +57,7 @@ export default function UserTable() {
   const filteredUsers = rows.filter((user) => {
     const name = user.name || ""; // BẢO VỆ khỏi undefined
     const email = user.email || ""; // BẢO VỆ khỏi undefined
-    
+
     const matchesSearch =
       name.toLowerCase().includes(search.toLowerCase()) ||
       email.toLowerCase().includes(search.toLowerCase());
@@ -253,7 +253,9 @@ export default function UserTable() {
                 ...user,
                 name: updatedUser.HoTen,
                 email: updatedUser.Email,
-                role: Array.isArray(updatedUser.VaiTro) ? updatedUser.VaiTro[0] : updatedUser.VaiTro,
+                role: Array.isArray(updatedUser.VaiTro)
+                  ? updatedUser.VaiTro[0]
+                  : updatedUser.VaiTro,
                 status: updatedUser.TrangThai,
               }
             : user
@@ -361,7 +363,9 @@ export default function UserTable() {
                     }
                     onClick={() => {
                       setLockId(user.id);
-                      setNextStatus(user.status === "active" ? "locked" : "active");
+                      setNextStatus(
+                        user.status === "active" ? "locked" : "active"
+                      );
                     }}
                     disabled={lockLoading}
                   >

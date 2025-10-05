@@ -31,12 +31,21 @@ const user = mongoose.model("User", {
   password: String,
 });
 
-//! Bước 5: Cấu hình Middleware
-app.use(express.json()); // Cho phép đoc dữ liệu dạng JSON
+//! Bước 5: Cấu hình Middleware cần thiết
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+// SỬA CORS - QUAN TRỌNG
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
-  credentials: true, // Cho phép cookies
-}))
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001", 
+    process.env.FRONTEND_URL
+  ].filter(Boolean), // Loại bỏ undefined
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 //! Bước 6:  API GET - Lấy toàn bộ users
 app.get("/users", async (req, res)=>{
@@ -62,11 +71,17 @@ app.post("/users", async (req, res)=>{
   }
 })
 
-//! Bước 8: Khởi động server
+//! Bước 8: API Routes với Auth
+// Đăng ký auth routes - QUAN TRỌNG
+app.use("/api/auth", require("./routes/auth"));
+
+// Các routes khác
+app.use("/api/taikhoan", require("./routes/taiKhoan"));
+app.use("/api/thietbi", require("./routes/thietBi"));
+
+//! Bước 9: Khởi động server
 app.listen(PORT, ()=>{
   console.log(`Server đang chạy trên cổng http://localhost:${PORT}`);
 })
 //* API Routes
 // app.use("/api/users", userRoutes); // User management routes: /api/users
-app.use("/api/taikhoan", require("./routes/taiKhoan"));
-app.use("/api/thietbi", require("./routes/thietBi"));

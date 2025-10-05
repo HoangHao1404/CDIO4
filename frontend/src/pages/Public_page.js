@@ -712,3 +712,4 @@ export const Public_page = () => {
 };
 
 export default Public_page;
+

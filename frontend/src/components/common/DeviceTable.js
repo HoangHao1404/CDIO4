@@ -13,6 +13,34 @@ export default function DeviceTable() {
   const [pagination, setPagination] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // THÊM CÁC STATE BỊ THIẾU
+  const [addLoading, setAddLoading] = useState(false);
+  const [addError, setAddError] = useState("");
+
+  // Danh sách thông số kỹ thuật theo yêu cầu
+  const thongSoKyThuatOptions = [
+    { value: "Nhiệt độ (°C)", label: "Nhiệt độ (°C)" },
+    { value: "Nồng độ (ppm)", label: "Nồng độ (ppm)" },
+    { value: "Nồng độ (%)", label: "Nồng độ (%)" },
+    { value: "Nồng độ (μg/m³)", label: "Nồng độ (μg/m³)" },
+  ];
+
+  // State cho form thêm thiết bị
+  const [newDevice, setNewDevice] = useState({
+    TenThietBi: "",
+    ThongSoKyThuat: "",
+    TrangThai: "offline"
+  });
+
+  // Xử lý thay đổi input trong form
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewDevice((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   // Fetch dữ liệu khi component mount hoặc các filter thay đổi
   useEffect(() => {
     const fetchDevices = async () => {
@@ -70,10 +98,51 @@ export default function DeviceTable() {
     return device.camBien[0].ThongSoKyThuat || "Không có dữ liệu";
   };
 
-  // Xử lý thêm thiết bị mới (sẽ triển khai sau)
-  const handleAddDevice = (e) => {
+  // CẬP NHẬT HÀM XỬ LÝ THÊM THIẾT BỊ
+  const handleAddDevice = async (e) => {
     e.preventDefault();
-    setIsModalOpen(false);
+    
+    // Validation cơ bản
+    if (!newDevice.TenThietBi.trim()) {
+      setAddError("Tên thiết bị không được để trống");
+      return;
+    }
+    
+    if (!newDevice.ThongSoKyThuat) {
+      setAddError("Vui lòng chọn thông số kỹ thuật");
+      return;
+    }
+
+    setAddLoading(true);
+    setAddError("");
+
+    try {
+      // Gọi API để tạo thiết bị mới
+      const createdDevice = await deviceAPI.create({
+        TenThietBi: newDevice.TenThietBi,
+        ThongSoKyThuat: newDevice.ThongSoKyThuat,
+        TrangThai: newDevice.TrangThai
+      });
+
+      // Thêm thiết bị mới vào đầu danh sách
+      setRows((prevRows) => [createdDevice, ...prevRows]);
+
+      // Reset form và đóng modal
+      setNewDevice({
+        TenThietBi: "",
+        ThongSoKyThuat: "",
+        TrangThai: "offline"
+      });
+      setIsModalOpen(false);
+      
+      console.log("✅ Thêm thiết bị thành công");
+      
+    } catch (err) {
+      setAddError(err.message || "Không thể tạo thiết bị mới");
+      console.error("❌ Lỗi khi tạo thiết bị:", err);
+    } finally {
+      setAddLoading(false);
+    }
   };
 
   return (
@@ -188,58 +257,106 @@ export default function DeviceTable() {
         </div>
       )}
 
-      {/* Modal thêm thiết bị (giữ nguyên từ code cũ) */}
+      {/* Modal thêm thiết bị */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Thêm Thiết Bị</h2>
 
             <form onSubmit={handleAddDevice} className="space-y-4">
+              {/* Hiển thị lỗi nếu có */}
+              {addError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-sm">
+                  {addError}
+                </div>
+              )}
+
+              {/* Tên thiết bị */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Tên Thiết Bị
                 </label>
                 <input
                   type="text"
-                  className="w-full border rounded-md px-3 py-2"
+                  name="TenThietBi"
+                  value={newDevice.TenThietBi}
+                  onChange={handleInputChange}
+                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ví dụ: Máy đo khí Gas để cháy"
                   required
                 />
               </div>
 
+              {/* Thông số kỹ thuật - DROPDOWN */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Thông số kỹ thuật
                 </label>
-                <input
-                  type="text"
-                  className="w-full border rounded-md px-3 py-2"
+                <select
+                  name="ThongSoKyThuat"
+                  value={newDevice.ThongSoKyThuat}
+                  onChange={handleInputChange}
+                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
-                />
+                >
+                  <option value="">-- Chọn thông số kỹ thuật --</option>
+                  {thongSoKyThuatOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
+              {/* Trạng thái */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Trạng thái
                 </label>
-                <select className="w-full border rounded-md px-3 py-2">
+                <select
+                  name="TrangThai"
+                  value={newDevice.TrangThai}
+                  onChange={handleInputChange}
+                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
                   <option value="online">Online</option>
                   <option value="offline">Offline</option>
+                  <option value="error">Lỗi</option>
+                  <option value="maintenance">Bảo trì</option>
                 </select>
               </div>
 
+              {/* Nút hành động */}
               <div className="flex gap-3 justify-end mt-6">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setNewDevice({
+                      TenThietBi: "",
+                      ThongSoKyThuat: "",
+                      TrangThai: "offline"
+                    });
+                    setAddError("");
+                  }}
                   className="px-4 py-2 border rounded-md hover:bg-gray-100"
+                  disabled={addLoading}
                 >
-                  Huỷ
+                  Hủy
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:opacity-50 flex items-center gap-2"
+                  disabled={addLoading}
                 >
-                  Thêm
+                  {addLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Đang thêm...
+                    </>
+                  ) : (
+                    "Thêm"
+                  )}
                 </button>
               </div>
             </form>

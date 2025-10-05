@@ -22,18 +22,22 @@ const taiKhoanSchema = new mongoose.Schema(
     },
     TenDangNhap: {
       type: String,
-      required: true,
+      required: [true, "Tên đăng nhập là bắt buộc"],
       unique: true,
+    },
+    HoTen: {
+      type: String,
+      default: "",
     },
     Email: {
       type: String,
-      required: true,
+      required: [true, "Email là bắt buộc"],
       unique: true,
       lowercase: true,
     },
     MatKhau: {
       type: String,
-      required: true,
+      required: [true, "Mật khẩu là bắt buộc"],
       select: false,
     },
     VaiTro: {
@@ -55,6 +59,7 @@ const taiKhoanSchema = new mongoose.Schema(
     },
   },
   {
+    collection: "TaiKhoan",
     toJSON: {
       transform: function (_doc, ret) {
         delete ret.__v;
@@ -77,10 +82,12 @@ taiKhoanSchema.pre("save", async function (next) {
   next();
 });
 
+// Phương thức so sánh mật khẩu
 taiKhoanSchema.methods.comparePassword = function (plain) {
   return bcrypt.compare(plain, this.MatKhau);
 };
 
+// Tìm tài khoản theo email và bao gồm mật khẩu
 taiKhoanSchema.statics.findByEmail = function (email) {
   return this.findOne({ Email: email }).select("+MatKhau");
 };
