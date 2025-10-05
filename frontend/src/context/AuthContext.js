@@ -96,7 +96,8 @@ export const AuthProvider = ({ children }) => {
         errorMessage =
           "Không thể kết nối đến máy chủ. Vui lòng kiểm tra backend server có chạy trên port 5001 không.";
       } else if (error.code === "ERR_FAILED") {
-        errorMessage = "Kết nối thất bại. Kiểm tra máy chủ backend và cấu hình CORS.";
+        errorMessage =
+          "Kết nối thất bại. Kiểm tra máy chủ backend và cấu hình CORS.";
       } else if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
@@ -141,7 +142,8 @@ export const AuthProvider = ({ children }) => {
 
       let errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
       if (error.code === "ERR_NETWORK") {
-        errorMessage = "Không thể kết nối đến máy chủ. Kiểm tra backend server.";
+        errorMessage =
+          "Không thể kết nối đến máy chủ. Kiểm tra backend server.";
       } else if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
