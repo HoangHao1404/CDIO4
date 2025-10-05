@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        error: "Vui lòng cung cấp đầy đủ thông tin: tên, email và mật khẩu"
+        error: "Vui lòng cung cấp đầy đủ thông tin: tên, email và mật khẩu",
       });
     }
 
@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        error: "Mật khẩu phải có ít nhất 6 ký tự"
+        error: "Mật khẩu phải có ít nhất 6 ký tự",
       });
     }
 
@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        error: "Email đã được sử dụng"
+        error: "Email đã được sử dụng",
       });
     }
 
@@ -54,10 +54,15 @@ router.post("/register", async (req, res) => {
       Email: email,
       MatKhau: password, // Sẽ được hash tự động bởi pre-save middleware
       VaiTro: ["User"],
-      TrangThai: "active"
+      TrangThai: "active",
     });
 
-    console.log("✅ Đăng ký thành công cho email:", email, "với ID:", newUser._id);
+    console.log(
+      "✅ Đăng ký thành công cho email:",
+      email,
+      "với ID:",
+      newUser._id
+    );
 
     res.status(201).json({
       success: true,
@@ -67,15 +72,14 @@ router.post("/register", async (req, res) => {
           id: newUser._id,
           name: newUser.HoTen,
           email: newUser.Email,
-        }
-      }
+        },
+      },
     });
-
   } catch (error) {
     console.error("❌ Lỗi đăng ký:", error);
     res.status(500).json({
       success: false,
-      error: "Lỗi server khi đăng ký tài khoản"
+      error: "Lỗi server khi đăng ký tài khoản",
     });
   }
 });
@@ -91,25 +95,25 @@ router.post("/login", async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        error: "Vui lòng cung cấp email và mật khẩu"
+        error: "Vui lòng cung cấp email và mật khẩu",
       });
     }
 
     // Tìm user và lấy cả password (được ẩn bằng select: false)
-    const user = await TaiKhoan.findOne({ Email: email }).select('+MatKhau');
+    const user = await TaiKhoan.findOne({ Email: email }).select("+MatKhau");
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: "Email hoặc mật khẩu không đúng"
+        error: "Email hoặc mật khẩu không đúng",
       });
     }
 
     // Kiểm tra trạng thái tài khoản
-    if (user.TrangThai !== 'active') {
+    if (user.TrangThai !== "active") {
       return res.status(401).json({
         success: false,
-        error: "Tài khoản đã bị khóa hoặc vô hiệu hóa"
+        error: "Tài khoản đã bị khóa hoặc vô hiệu hóa",
       });
     }
 
@@ -118,7 +122,7 @@ router.post("/login", async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({
         success: false,
-        error: "Email hoặc mật khẩu không đúng"
+        error: "Email hoặc mật khẩu không đúng",
       });
     }
 
@@ -137,15 +141,14 @@ router.post("/login", async (req, res) => {
           name: user.HoTen || user.TenDangNhap,
           email: user.Email,
           role: user.VaiTro,
-        }
-      }
+        },
+      },
     });
-
   } catch (error) {
     console.error("❌ Lỗi đăng nhập:", error);
     res.status(500).json({
       success: false,
-      error: "Lỗi server khi đăng nhập"
+      error: "Lỗi server khi đăng nhập",
     });
   }
 });
@@ -153,10 +156,10 @@ router.post("/login", async (req, res) => {
 // @route POST /api/auth/logout
 router.post("/logout", (req, res) => {
   console.log("✅ Nhận được request đăng xuất");
-  
+
   res.status(200).json({
     success: true,
-    message: "Đăng xuất thành công"
+    message: "Đăng xuất thành công",
   });
 });
 

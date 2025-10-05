@@ -11,18 +11,19 @@ require("dotenv").config(); // Load biến môi trường từ file .env
 //! Bước 2: Khởi tạo ứng dụng Express
 const app = express();
 const PORT = process.env.BACKEND_PORT || 5000; // Cổng mà server sẽ lắng nghe
- 
+
 //! Bước 3: Kết nối tới MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true, // Sử dụng trình phân tích cú pháp mới
-  useUnifiedTopology: true, // Sử dụng trình quản lý kết nối mới
-})
-.then(()=>{
-  console.log("Kết nối tới MongoDB thành công");
-})
-.catch((err)=>{
-  console.error("Lỗi kết nối tới MongoDB:", err);
-});
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true, // Sử dụng trình phân tích cú pháp mới
+    useUnifiedTopology: true, // Sử dụng trình quản lý kết nối mới
+  })
+  .then(() => {
+    console.log("Kết nối tới MongoDB thành công");
+  })
+  .catch((err) => {
+    console.error("Lỗi kết nối tới MongoDB:", err);
+  });
 
 //! Bước 4: Đinh nghĩa Schema và Model
 const user = mongoose.model("User", {
@@ -36,31 +37,33 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // SỬA CORS - QUAN TRỌNG
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:3001", 
-    process.env.FRONTEND_URL
-  ].filter(Boolean), // Loại bỏ undefined
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean), // Loại bỏ undefined
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 //! Bước 6:  API GET - Lấy toàn bộ users
-app.get("/users", async (req, res)=>{
-  try{
+app.get("/users", async (req, res) => {
+  try {
     const users = await user.find(); // Lấy toàn bộ users từ database
     res.status(200).json(users); // Trả về danh sách users
   } catch (error) {
     console.error("Lỗi khi lấy danh sách người dùng:", error);
     res.status(500).json({ error: "Lỗi server" });
   }
-})
+});
 
 //! Bước 7: API POST - Tạo mới user
-app.post("/users", async (req, res)=>{
-  try{
+app.post("/users", async (req, res) => {
+  try {
     const { name, email, password } = req.body; // Lấy dữ liệu từ body request
     const newUser = new user({ name, email, password }); // Tạo mới user
     await newUser.save(); // Lưu user vào database
@@ -69,19 +72,17 @@ app.post("/users", async (req, res)=>{
     console.error("Lỗi khi tạo người dùng mới:", error);
     res.status(500).json({ error: "Lỗi server" });
   }
-})
+});
 
 //! Bước 8: API Routes với Auth
 // Đăng ký auth routes - QUAN TRỌNG
 app.use("/api/auth", require("./routes/auth"));
-
-// Các routes khác
 app.use("/api/taikhoan", require("./routes/taiKhoan"));
 app.use("/api/thietbi", require("./routes/thietBi"));
 
 //! Bước 9: Khởi động server
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
   console.log(`Server đang chạy trên cổng http://localhost:${PORT}`);
-})
+});
 //* API Routes
 // app.use("/api/users", userRoutes); // User management routes: /api/users
