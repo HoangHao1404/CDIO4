@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { FaGoogle, FaGithub, FaFacebookF, FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaGoogle,
+  FaGithub,
+  FaFacebookF,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export const SignIn = () => {
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -9,45 +17,87 @@ export const SignIn = () => {
   const [showToast, setShowToast] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  // ==========================
+  // HANDLE SUBMIT LOGIN
+  // ==========================
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!email || !password) {
       setError("Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    setError("");
 
     setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await login(email, password);
+      console.log("📥 Kết quả đăng nhập:", res);
+
+      if (res.success) {
+        setShowToast(true);
+
+        // ✅ Lấy role chính xác từ backend
+        const role = Array.isArray(res.user?.role)
+          ? res.user.role[0]
+          : res.user?.role || "User";
+
+        console.log("🧩 Vai trò:", role);
+
+        // ✅ Admin → /admin/users, User → /dashboard
+        const redirectPath = role === "Admin" ? "/admin/users" : "/dashboard";
+
+        // ✅ Hiển thị thông báo & chuyển trang
+        setTimeout(() => {
+          setShowToast(false);
+          navigate(redirectPath);
+        }, 1200);
+      } else {
+        setError(res.error || "Đăng nhập thất bại");
+      }
+    } catch (err) {
+      console.error("❌ Lỗi đăng nhập:", err);
+      setError("Đã xảy ra lỗi trong quá trình đăng nhập");
+    } finally {
       setIsLoading(false);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    }, 1500);
+    }
   };
 
+  // ==========================
+  // UI
+  // ==========================
   return (
     <>
-      {/* Toast khi đăng nhập thành công */}
+      {/* ✅ Toast thông báo đăng nhập thành công */}
       {showToast && (
-        <div className="fixed top-4 right-4 flex items-center gap-2 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50">
+        <div className="fixed top-4 right-4 flex items-center gap-2 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg z-50 animate-fade-in-down">
           <svg
             className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
           <div>
-            <h3 className="font-medium">Đăng nhập thành công!</h3>
-            <p className="text-sm text-green-100">Chào mừng bạn quay lại AirZen</p>
+            <h3 className="font-semibold">Đăng nhập thành công!</h3>
+            <p className="text-sm text-green-100">
+              Chào mừng bạn quay lại AirZen 🌿
+            </p>
           </div>
         </div>
       )}
 
-      {/* Layout chính */}
+      {/* ✅ Layout chính */}
       <div
         className="min-h-screen flex items-center justify-center bg-cover bg-center"
         style={{
@@ -67,7 +117,9 @@ export const SignIn = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+            {error && (
+              <p className="text-red-400 text-sm text-center">{error}</p>
+            )}
 
             <div>
               <label className="block text-white text-sm font-medium mb-2">
@@ -116,15 +168,10 @@ export const SignIn = () => {
                 isLoading ? "cursor-not-allowed opacity-70" : ""
               }`}
             >
-              <span
-                className={`inline-flex items-center ${
-                  isLoading ? "invisible" : ""
-                }`}
-              >
-                Sign in
-              </span>
-              {isLoading && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              {!isLoading ? (
+                <span>Sign in</span>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
                 </div>
               )}
@@ -134,11 +181,13 @@ export const SignIn = () => {
           {/* Divider */}
           <div className="flex items-center my-6">
             <div className="flex-grow h-px bg-gray-500"></div>
-            <span className="px-4 text-gray-300 text-sm">or continue with</span>
+            <span className="px-4 text-gray-300 text-sm">
+              or continue with
+            </span>
             <div className="flex-grow h-px bg-gray-500"></div>
           </div>
 
-          {/* Social Login */}
+          {/* Social login (mock) */}
           <div className="flex gap-3">
             <button className="flex-1 flex items-center justify-center py-2 rounded-lg bg-white shadow hover:bg-gray-100 text-red-500">
               <FaGoogle className="text-lg" />
@@ -151,7 +200,7 @@ export const SignIn = () => {
             </button>
           </div>
 
-          {/* Link đến Register */}
+          {/* Register link */}
           <p className="text-center text-gray-300 text-sm mt-6">
             Don’t have an account yet?{" "}
             <a

@@ -109,6 +109,7 @@ const login = async (req, res, next) => {
 
     const { email, password } = req.body;
     const user = await TaiKhoan.findByEmail(email);
+    console.log("🔍 Tìm user:", user ? user.Email : "Không thấy user");
     if (!user)
       return res
         .status(401)
@@ -118,6 +119,7 @@ const login = async (req, res, next) => {
         });
 
     const ok = await user.comparePassword(password);
+    console.log("🔍 Tìm user:", user ? user.Email : "Không thấy user");
     if (!ok)
       return res
         .status(401)

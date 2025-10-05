@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Bell,
   Cloud,
-  Loader2,
   LogOut,
   Moon,
   Settings,
@@ -10,17 +10,9 @@ import {
   User,
 } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext"; 
 
-// Mock user
-const useAuth = () => ({
-  user: {
-    name: "Cà phê",
-    avatarUrl:
-      "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=256&auto=format&fit=crop",
-  },
-});
-
-// Avatar
+// Avatar component
 const Avatar = ({ src, alt }) => (
   <img
     src={src}
@@ -32,9 +24,16 @@ const Avatar = ({ src, alt }) => (
 
 export default function NavbarAirZen() {
   const { theme, toggleTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, logout } = useAuth(); // lấy user + logout từ AuthContext
+  const navigate = useNavigate(); // hook điều hướng
 
   const [openUser, setOpenUser] = useState(false);
+
+  const handleLogout = () => {
+    logout(); // xóa token, user khỏi localStorage
+    setOpenUser(false);
+    navigate("/signin"); // điều hướng về trang đăng nhập
+  };
 
   return (
     <header
@@ -68,7 +67,7 @@ export default function NavbarAirZen() {
           <span className="absolute -top-0.5 -right-0.5 inline-block h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
         </button>
 
-        {/* User */}
+        {/* User dropdown */}
         <div className="relative">
           <button
             onClick={() => setOpenUser((v) => !v)}
@@ -79,9 +78,9 @@ export default function NavbarAirZen() {
                        hover:bg-amber-100 dark:hover:bg-zinc-600"
           >
             <span className="text-sm text-zinc-800 dark:text-zinc-200">
-              Xin chào, <span className="font-semibold">{user.name}</span> 👋
+              Xin chào, <span className="font-semibold">{user?.name || "Người dùng"}</span> 👋
             </span>
-            <Avatar src={user.avatarUrl} alt={user.name} />
+            {/* <Avatar src={user?.avatarUrl} alt={user?.name} /> */}
           </button>
 
           {openUser && (
@@ -119,8 +118,11 @@ export default function NavbarAirZen() {
                   </button>
                 </li>
                 <li>
-                  <button className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
-                                     hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm text-rose-600">
+                  <button
+                    onClick={handleLogout} 
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 
+                               hover:bg-zinc-50 dark:hover:bg-zinc-700 text-sm text-rose-600"
+                  >
                     <LogOut className="h-4 w-4" /> Đăng xuất
                   </button>
                 </li>

@@ -3,187 +3,187 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
-// Cấu hình axios theo hướng dẫn dự án - đọc từ .env
+// ====================
+// Cấu hình Axios chung
+// ====================
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:5001/api",
   withCredentials: true,
   timeout: 10000,
 });
 
-// Interceptor debug theo quy chuẩn tiếng Việt
 api.interceptors.request.use(
   (config) => {
-    console.log(`🚀 Gọi API: ${config.method?.toUpperCase()} ${config.url}`);
-    console.log(`📤 Dữ liệu gửi:`, config.data);
+    console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    console.log(`📤 Body gửi:`, config.data);
     return config;
   },
   (error) => {
-    console.error("❌ Lỗi yêu cầu:", error);
+    console.error("❌ Lỗi request:", error);
     return Promise.reject(error);
   }
 );
 
 api.interceptors.response.use(
-  (response) => {
-    console.log(`✅ Phản hồi thành công:`, response.data);
-    return response;
+  (res) => {
+    console.log(`✅ Response từ server:`, res.data);
+    return res;
   },
-  (error) => {
-    console.error("❌ Lỗi phản hồi:", error.response?.data || error.message);
-    return Promise.reject(error);
+  (err) => {
+    console.error("❌ Response error:", err.response?.data || err.message);
+    return Promise.reject(err);
   }
 );
 
+// ====================
+// Context Provider
+// ====================
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Kiểm tra xác thực từ localStorage khi app khởi động
+  // ==========================================
+  // Khi reload, kiểm tra dữ liệu user trong localStorage
+  // ==========================================
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("user");
 
-    if (token && userData) {
+    if (token && storedUser) {
       try {
-        setUser(JSON.parse(userData));
+        const parsed = JSON.parse(storedUser);
+        setUser(parsed);
         setIsAuthenticated(true);
-      } catch (error) {
-        console.error("❌ Lỗi khi parse dữ liệu user:", error);
+        console.log("🔁 Đã tải user từ localStorage:", parsed);
+      } catch (err) {
+        console.error("❌ Lỗi parse user:", err);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
       }
     }
-
-    setLoading(false);
   }, []);
 
-  // Hàm đăng ký với error handling chi tiết
+  // ==========================================
+  // Đăng ký
+  // ==========================================
   const register = async (userData) => {
     try {
-      setError("");
       setLoading(true);
+      setError("");
 
-      console.log("📝 Bắt đầu đăng ký với dữ liệu:", userData);
+      const res = await api.post("/auth/register", userData);
+      if (res.data.success) {
+        return { success: true, message: res.data.message };
+      }
 
-      const response = await api.post("/auth/register", userData);
+      return { success: false, error: res.data.error || "Đăng ký thất bại" };
+    } catch (err) {
+      console.error("❌ Lỗi đăng ký:", err);
+      let msg = "Không thể đăng ký. Vui lòng thử lại.";
+      if (err.response?.data?.error?.message) msg = err.response.data.error.message;
+      setError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      if (response.data.success) {
-        console.log("✅ Đăng ký thành công:", response.data.message);
+  // ==========================================
+  // Đăng nhập
+  // ==========================================
+  const login = async (email, password) => {
+    try {
+      setLoading(true);
+      setError("");
+
+      console.log("🔐 Đăng nhập bằng:", email);
+
+      const res = await api.post("/auth/login", { email, password });
+
+      if (res.data.success) {
+        const { token, data } = res.data;
+        const userData = data.user;
+
+        // 🧠 Nếu backend trả về "role": ["Admin"], ta lấy phần tử đầu tiên
+        const role = Array.isArray(userData.role)
+          ? userData.role[0]
+          : userData.role || "User";
+
+        // ✅ Đồng bộ vào localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify({ ...userData, role }));
+
+        setUser({ ...userData, role });
+        setIsAuthenticated(true);
+
+        console.log(`✅ Đăng nhập thành công với quyền: ${role}`);
+
         return {
           success: true,
-          message: response.data.message,
+          user: { ...userData, role },
+          redirect: role === "Admin" ? "/admin/users" : "/dashboard",
         };
       }
 
       return {
         success: false,
-        error: response.data.error || "Đăng ký thất bại",
+        error: res.data.error || "Đăng nhập thất bại",
       };
-    } catch (error) {
-      console.error("❌ Chi tiết lỗi đăng ký:", {
-        message: error.message,
-        code: error.code,
-        response: error.response?.data,
-        status: error.response?.status,
-      });
+    } catch (err) {
+      console.error("❌ Chi tiết lỗi đăng nhập:", err);
 
-      let errorMessage = "Đăng ký thất bại. Vui lòng thử lại.";
-
-      // Xử lý lỗi theo hướng dẫn dự án
-      if (error.code === "ERR_NETWORK" || error.code === "ECONNREFUSED") {
-        errorMessage =
-          "Không thể kết nối đến máy chủ. Vui lòng kiểm tra backend server có chạy trên port 5001 không.";
-      } else if (error.code === "ERR_FAILED") {
-        errorMessage =
-          "Kết nối thất bại. Kiểm tra máy chủ backend và cấu hình CORS.";
-      } else if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+      let msg = "Đăng nhập thất bại. Vui lòng thử lại.";
+      if (err.code === "ERR_NETWORK") {
+        msg = "Không thể kết nối đến máy chủ backend.";
+      } else if (err.response?.data?.error?.message) {
+        msg = err.response.data.error.message;
       }
 
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
+      setError(msg);
+      return { success: false, error: msg };
     } finally {
       setLoading(false);
     }
   };
 
-  // Hàm đăng nhập tương tự
-  const login = async (email, password) => {
-    try {
-      setError("");
-      setLoading(true);
-
-      console.log("🔐 Bắt đầu đăng nhập với email:", email);
-
-      const response = await api.post("/auth/login", { email, password });
-
-      if (response.data.success) {
-        const { token, data } = response.data;
-
-        // Lưu theo chuẩn dự án
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        setUser(data.user);
-        setIsAuthenticated(true);
-
-        console.log("✅ Đăng nhập thành công:", data.user.name);
-        return { success: true, user: data.user };
-      }
-
-      return {
-        success: false,
-        error: response.data.error || "Đăng nhập thất bại",
-      };
-    } catch (error) {
-      console.error("❌ Chi tiết lỗi đăng nhập:", error);
-
-      let errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
-      if (error.code === "ERR_NETWORK") {
-        errorMessage =
-          "Không thể kết nối đến máy chủ. Kiểm tra backend server.";
-      } else if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      }
-
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // ==========================================
+  // Đăng xuất
+  // ==========================================
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     setIsAuthenticated(false);
-    setError("");
-    console.log("✅ Đăng xuất thành công");
+    console.log("🚪 Đã đăng xuất");
   };
 
   const clearError = () => setError("");
 
-  const value = {
-    user,
-    loading,
-    isAuthenticated,
-    error,
-    register,
-    login,
-    logout,
-    clearError,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        loading,
+        error,
+        register,
+        login,
+        logout,
+        clearError,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
+// ====================
+// Hook sử dụng
+// ====================
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth phải được sử dụng trong AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth phải dùng trong AuthProvider");
+  return ctx;
 };

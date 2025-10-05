@@ -4,6 +4,7 @@ import "./styles/App.css";
 
 // Layout
 import Layout from "./components/common/Layout";
+import LayoutAdmin from "./components/common/LayoutAdmin";
 
 // Pages
 import Dashboard from "./pages/Dashboard";
@@ -16,31 +17,38 @@ import Setting from "./components/common/Setting";
 import Register from "./pages/Register";
 import SignIn from "./pages/Sign_in";
 import Public_page from "./pages/Public_page";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import RequireAdmin from "./components/common/RequireAdmin";
 
 function App() {
   return (
       <Routes>
-        {/* Trang public */}
-          <Route path="public" element={<Public_page />} />
-
-          {/* Auth */}
+        {/* Public */}
+          <Route path="/" element={<Public_page />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
 
+          {/* Protected */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/air-quality" element={<AirQualityIndexPage />} />  
+              <Route path="/threshold" element={<ThresholdePage />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/settings" element={<Setting />} />
+            </Route>
+          </Route>
 
-        {/* Protected Routes with Layout */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="air-quality" element={<AirQualityIndexPage />} />
-          <Route path="devices" element={<DeviceManagerment />} />
-          <Route path="users" element={<UserManagerment />} />
-          <Route path="threshold" element={<ThresholdePage />} />
-          <Route path="history" element={<History />} />
-          <Route path="settings" element={<Setting />} />
+           {/* Protected Admin Routes */}
+        <Route element={<RequireAdmin />}>
+          <Route path="/admin" element={<LayoutAdmin />}>
+            <Route path="users" element={<UserManagerment />} />
+            <Route path="devices" element={<DeviceManagerment />} />
+          </Route>
         </Route>
 
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     
   );

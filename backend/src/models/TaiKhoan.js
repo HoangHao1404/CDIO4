@@ -85,11 +85,15 @@ taiKhoanSchema.pre("save", async function (next) {
 // Phương thức so sánh mật khẩu
 taiKhoanSchema.methods.comparePassword = function (plain) {
   return bcrypt.compare(plain, this.MatKhau);
+  // return plain === this.MatKhau;
 };
 
 // Tìm tài khoản theo email và bao gồm mật khẩu
 taiKhoanSchema.statics.findByEmail = function (email) {
-  return this.findOne({ Email: email }).select("+MatKhau");
+  return this.findOne({
+    Email: new RegExp("^" + email + "$", "i"), // không phân biệt hoa thường
+  }).select("+MatKhau");
 };
+
 
 module.exports = mongoose.model("TaiKhoan", taiKhoanSchema, "TaiKhoan");

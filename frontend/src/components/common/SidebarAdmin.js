@@ -3,11 +3,12 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 
 const menuItems = [
-  { key: "Dashboard", label: "Dashboard", icon: require("../../image/overview.png"), path: "/dashboard" },
-  { key: "AirQuality", label: "Chỉ số không khí", icon: require("../../image/Chisokk.png"), path: "/air-quality" },
-  { key: "SafeThreshold", label: "Ngưỡng an toàn", icon: require("../../image/NguongAnToan.png"), path: "/threshold" },
-  { key: "History", label: "Lịch sử", icon: require("../../image/LichSu.png"), path: "/history" },
-  { key: "Settings", label: "Cài đặt", icon: require("../../image/CaiDat.png"), path: "/settings" },
+  { key: "Overview", label: "Overview", icon: require("../../image/overview.png"), path: "/admin/overview" },//thiếu
+  { key: "QuanLyUser", label: "Quản lý user", icon: require("../../image/ic_user.png"), path: "/admin/users" },
+  { key: "QuanLyThietBi", label: "Quản lý thiết bị", icon: require("../../image/ic_threshold.png"), path: "/admin/devices" },
+  { key: "YCHT", label: "Yêu cầu hỗ trợ", icon: require("../../image/ic_ycht.png"), path: "/admin/require" },//thiếu
+  { key: "ThongBao", label: "Quản lý thông báo", icon: require("../../image/ic_thongbao.png"), path: "/admin/notification" },//thiếu
+  { key: "CaiDat", label: "Cài đặt", icon: require("../../image/CaiDat.png"), path: "/admin/settings" },//thiếu
 ];
 
 const HIGHLIGHT_H = 44;
@@ -51,7 +52,7 @@ const Sidebar = () => {
     <div className="fixed left-[-10px] top-0 h-screen w-[250px] flex items-start justify-start p-7 z-30">
       <div className="relative">
         <aside
-          className={`w-[216px] h-[700px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
+          className={`w-[216px] h-[755px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
           ${theme === "light" ? "bg-white text-black" : "bg-zinc-900 text-zinc-200"}`}
         >
           {/* Logo */}
@@ -102,13 +103,13 @@ const Sidebar = () => {
             ))}
           </nav>
 
-          {/* Logout
+          {/* Logout */}
           <button className="absolute bottom-[27px] left-[63px] flex items-center gap-1">
             <img src={require("../../image/Logout.png")} alt="Logout" className="w-5 h-5" />
             <span className="font-['Inter'] text-[16px] text-[#969696] dark:text-zinc-400 ml-1">
               Log Out
             </span>
-          </button> */}
+          </button>
         </aside>
       </div>
     </div>

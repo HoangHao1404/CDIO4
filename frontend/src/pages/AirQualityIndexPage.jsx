@@ -10,11 +10,6 @@ import {
   ReferenceLine,
 } from "recharts";
 
-/**
- * AirZen - Air Quality Index Page (Recharts + Tailwind)
- * Controls overlay trong card; trục X/Y config domain/ticks/đơn vị.
- */
-
 // =====================
 // Config ngưỡng & label
 // =====================
@@ -22,48 +17,45 @@ const METRICS = {
   PM25: {
     key: "PM2.5",
     unit: "µg/m³",
-    baseline: 15, // 24h trung bình theo WHO
+    baseline: 15,
     footer:
-      "Khuyến nghị WHO Global Air Quality Guidelines 2021: PM2.5 (24h trung bình) ≤ 15 µg/m³; hàng năm ≤ 5 µg/m³. (WHO 2021)",
+      "Khuyến nghị WHO: PM2.5 (24h trung bình) ≤ 15 µg/m³; hàng năm ≤ 5 µg/m³.",
     healthy: (v) => v <= 15,
   },
   CO2: {
     key: "CO₂",
     unit: "ppm",
-    baseline: 1000, // ngưỡng thường được coi là thoải mái
+    baseline: 1000,
     footer:
-      "Khuyến nghị từ ASHRAE / Indoor Air Quality guidelines: CO₂ trong nhà nên ≤ 1000 ppm để đảm bảo thông thoáng & hiệu quả nhận thức. (ASHRAE / chuẩn IAQ)",
+      "Khuyến nghị ASHRAE: CO₂ trong nhà nên ≤ 1000 ppm để đảm bảo thông thoáng.",
     healthy: (v) => v <= 1000,
   },
   TEMP: {
     key: "Nhiệt độ",
     unit: "°C",
-    baseline: 26, // mức cao trên phạm vi thoải mái
+    baseline: 26,
     footer:
-      "Khuyến nghị từ OSHA – Indoor Thermal Comfort: Nhiệt độ thoải mái trong nhà ~20-26 °C. (Chuẩn công nghiệp / sức khoẻ)",
+      "Khuyến nghị OSHA: Nhiệt độ thoải mái trong nhà khoảng 20–26 °C.",
     healthy: (v) => v >= 20 && v <= 26,
   },
   HUMI: {
     key: "Độ ẩm",
     unit: "%",
-    baseline: 60, // ngưỡng cao để tránh mốc
+    baseline: 60,
     footer:
-      "Khuyến nghị từ ASHRAE / REHVA (Indoor Humidity Guidelines): Độ ẩm tương đối trong nhà thoải mái 40-60 %.",
+      "Khuyến nghị ASHRAE: Độ ẩm tương đối trong nhà lý tưởng 40–60%.",
     healthy: (v) => v >= 40 && v <= 60,
   },
   GAS: {
     key: "Khí gas",
     unit: "ppm",
-    baseline: 50, // ví dụ: nếu là khí VOC/gas chung
+    baseline: 50,
     footer:
-      "Khuyến nghị từ WHO Air Quality Guidelines, US EPA: mức khí “gas” chung (VOC / khí hít vào) nên thấp; < 50 ppm chỉ là ví dụ.",
+      "Khuyến nghị WHO: Khí VOC / gas nên dưới 50 ppm để đảm bảo an toàn.",
     healthy: (v) => v <= 50,
   },
 };
 
-// =====================
-// Cấu hình trục
-// =====================
 const Y_DOMAIN = {
   PM25: { min: 0, max: 60, step: 15 },
   CO2: { min: 400, max: 1600, step: 200 },
@@ -146,6 +138,8 @@ function genData(metricKey, range) {
     GAS: { base: 6, jitter: 6 },
   }[metricKey];
 
+  if (!cfg) return [];
+
   const r =
     range === "realtime" || range === "day"
       ? { n: 24, stepHours: 1 }
@@ -214,11 +208,10 @@ export default function AirQualityIndexPage() {
   const xProps = xAxisPropsByRange(range);
 
   return (
-    // CHANGED 1: bỏ padding ngang, giảm gap để footer cao hơn
     <div className="h-full w-full flex flex-col gap-3 px-0">
-      {/* Card biểu đồ + controls overlay */}
-      <div className="relative flex-1 min-h-0 rounded-3xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/50 lg:p-6 overflow-hidden">
-        {/* Controls nổi bên trong card */}
+      {/* Card biểu đồ */}
+      <div className="relative flex-1 min-h-[420px] rounded-3xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/50 lg:p-6 overflow-hidden">
+        {/* Controls */}
         <div className="absolute inset-x-4 top-2 z-10 flex items-start justify-between pointer-events-none">
           <div className="pointer-events-auto">
             <StatusBadge metric={metric} currentValue={current} />
@@ -233,14 +226,10 @@ export default function AirQualityIndexPage() {
           </div>
         </div>
 
-        {/* Chart fill toàn card */}
-        <div className="h-full w-full pt-16">
-          {/* pt-16: chừa không gian phía trên cho controls */}
+        {/* Biểu đồ */}
+        <div className="h-[400px] w-full pt-16">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={data}
-              margin={{ top: 8, right: 10, left: 0, bottom: 0 }}
-            >
+            <LineChart data={data} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="label"
@@ -268,17 +257,14 @@ export default function AirQualityIndexPage() {
                   offset: 10,
                 }}
               />
-              <Tooltip
-                content={<DotTooltip />}
-                cursor={{ strokeDasharray: "3 3" }}
-              />
+              <Tooltip content={<DotTooltip />} cursor={{ strokeDasharray: "3 3" }} />
               <Line
                 type="monotone"
                 dataKey="value"
-                stroke="#6366f1"
+                stroke="#22c55e"
                 strokeWidth={3}
-                dot={{ r: 0 }}
-                activeDot={{ r: 6 }}
+                dot={false}
+                activeDot={{ r: 5 }}
               />
             </LineChart>
           </ResponsiveContainer>
