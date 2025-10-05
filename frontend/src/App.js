@@ -26,19 +26,22 @@ function App() {
           <Route path="/signup" element={<Register />} />
 
           {/* Routes có layout - Dashboard chính */}
-          <Route path="/*" element={
-            <div className="flex h-screen bg-gray-50">
-              <Sidebar />
-              <Navbar />
-              <div className="fixed top-28 left-[250px] right-4">
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/users" element={<UserTable />} />
-                  <Route path="/devices" element={<DeviceManagerment />} />
-                </Routes>
+          <Route
+            path="/*"
+            element={
+              <div className="flex h-screen bg-gray-50">
+                <Sidebar />
+                <Navbar />
+                <div className="fixed top-28 left-[250px] right-4">
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/users" element={<UserTable />} />
+                    <Route path="/devices" element={<DeviceManagerment />} />
+                  </Routes>
+                </div>
               </div>
-            </div>
-          } />
+            }
+          />
         </Routes>
       </AuthProvider>
     </Router>
