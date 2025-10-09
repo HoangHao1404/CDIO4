@@ -1,3 +1,17 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  @apply bg-white text-zinc-900 transition-colors duration-300;
+}
+/* Khi bật dark mode, tự đổi nền và màu chữ toàn ứng dụng */
+.dark body {
+  @apply bg-zinc-900 text-zinc-100 transition-colors duration-300;
+}
+
+
 *,
 ::before,
 ::after {
