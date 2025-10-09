@@ -1,5 +1,5 @@
 import React from 'react'
-import UserTable from "../components/common/UserTable"  // Fixed import path
+import UserTable from "../components/common/UserTable"  
 
 export const UserManagerment = () => {
   return (

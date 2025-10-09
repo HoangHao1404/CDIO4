@@ -95,7 +95,7 @@ function xAxisPropsByRange(range) {
 function Select({ value, onChange, options }) {
   return (
     <select
-      className="h-9 rounded-xl border border-slate-200 bg-white/90 px-3 text-sm shadow-sm outline-none transition hover:bg-white focus:border-slate-300 dark:bg-slate-800/70 dark:border-slate-700"
+      className="h-9 rounded-xl border border-slate-200 bg-white/90 px-3 text-sm shadow-sm outline-none transition hover:bg-white focus:border-slate-300 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
@@ -107,20 +107,6 @@ function Select({ value, onChange, options }) {
     </select>
   );
 }
-
-const METRIC_OPTIONS = [
-  { value: "PM25", label: "PM2.5" },
-  { value: "CO2", label: "CO2" },
-  { value: "TEMP", label: "Nhiệt độ" },
-  { value: "HUMI", label: "Độ ẩm" },
-  { value: "GAS", label: "Gas" },
-];
-const RANGE_OPTIONS = [
-  { value: "realtime", label: "Real-time" },
-  { value: "day", label: "Theo ngày" },
-  { value: "week", label: "Theo tuần" },
-  { value: "month", label: "Theo tháng" },
-];
 
 // =====================
 // Fake data demo
@@ -208,9 +194,9 @@ export default function AirQualityIndexPage() {
   const xProps = xAxisPropsByRange(range);
 
   return (
-    <div className="h-full w-full flex flex-col gap-3 px-0">
+    <div className="h-full w-full flex flex-col gap-3 px-0 transition-colors duration-300">
       {/* Card biểu đồ */}
-      <div className="relative flex-1 min-h-[420px] rounded-3xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/50 lg:p-6 overflow-hidden">
+      <div className="relative flex-1 min-h-[420px] rounded-3xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur transition-colors duration-300 dark:border-zinc-700 dark:bg-zinc-800/50 lg:p-6 overflow-hidden">
         {/* Controls */}
         <div className="absolute inset-x-4 top-2 z-10 flex items-start justify-between pointer-events-none">
           <div className="pointer-events-auto">
@@ -220,9 +206,24 @@ export default function AirQualityIndexPage() {
             <Select
               value={metricKey}
               onChange={setMetricKey}
-              options={METRIC_OPTIONS}
+              options={[
+                { value: "PM25", label: "PM2.5" },
+                { value: "CO2", label: "CO2" },
+                { value: "TEMP", label: "Nhiệt độ" },
+                { value: "HUMI", label: "Độ ẩm" },
+                { value: "GAS", label: "Gas" },
+              ]}
             />
-            <Select value={range} onChange={setRange} options={RANGE_OPTIONS} />
+            <Select
+              value={range}
+              onChange={setRange}
+              options={[
+                { value: "realtime", label: "Real-time" },
+                { value: "day", label: "Theo ngày" },
+                { value: "week", label: "Theo tuần" },
+                { value: "month", label: "Theo tháng" },
+              ]}
+            />
           </div>
         </div>
 
@@ -231,12 +232,7 @@ export default function AirQualityIndexPage() {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: 12 }}
-                tickMargin={8}
-                {...xProps}
-              />
+              <XAxis dataKey="label" tick={{ fontSize: 12 }} tickMargin={8} {...xProps} />
               <YAxis
                 domain={getYDomain(metricKey)}
                 ticks={genYTicks(metricKey)}
@@ -272,9 +268,9 @@ export default function AirQualityIndexPage() {
       </div>
 
       {/* Footer WHO */}
-      <div className="shrink-0 rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm text-slate-600 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300">
+      <div className="shrink-0 rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm text-slate-600 shadow-sm backdrop-blur transition-colors duration-300 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300">
         <span className="inline-flex items-center gap-2">
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs">
+          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs dark:border-zinc-600">
             ℹ️
           </span>
           {metric.footer}
