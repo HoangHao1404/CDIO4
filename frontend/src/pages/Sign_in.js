@@ -49,7 +49,7 @@ const SignIn = () => {
         console.log("🧩 Vai trò:", role);
 
         // ✅ Admin → /admin/users, User → /dashboard
-        const redirectPath = role === "Admin" ? "/admin/users" : "/dashboard";
+        const redirectPath = role === "Admin" ? "/admin/overview" : "/dashboard";
 
         // ✅ Hiển thị thông báo & chuyển trang
         setTimeout(() => {
@@ -91,7 +91,7 @@ const SignIn = () => {
           <div>
             <h3 className="font-semibold">Đăng nhập thành công!</h3>
             <p className="text-sm text-green-100">
-              Chào mừng bạn quay lại AirZen 🌿
+              Chào mừng bạn quay lại AirZen
             </p>
           </div>
         </div>

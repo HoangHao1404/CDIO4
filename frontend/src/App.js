@@ -19,6 +19,10 @@ import SignIn from "./pages/Sign_in";
 import Public_page from "./pages/Public_page";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import RequireAdmin from "./components/common/RequireAdmin";
+import AdminOverview from "./pages/AdminOverview";
+import RequestSupport from "./pages/RequestSupport";
+import NotificationPage from "./pages/NotificationManagerment";
+import AdminSetting from "./components/common/AdminSetting";
 
 function App() {
   return (
@@ -42,8 +46,12 @@ function App() {
            {/* Protected Admin Routes */}
         <Route element={<RequireAdmin />}>
           <Route path="/admin" element={<LayoutAdmin />}>
+            <Route path="overview" element={<AdminOverview/>}/>
             <Route path="users" element={<UserManagerment />} />
             <Route path="devices" element={<DeviceManagerment />} />
+            <Route path="request" element={<RequestSupport/>}/>
+            <Route path="notification" element={<NotificationPage/>}/>
+            <Route path="setting" element={<AdminSetting/>}/>
           </Route>
         </Route>
 

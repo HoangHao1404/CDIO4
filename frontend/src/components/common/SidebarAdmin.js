@@ -3,18 +3,48 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 
 const menuItems = [
-  { key: "Overview", label: "Overview", icon: require("../../image/overview.png"), path: "/admin/overview" },//thiếu
-  { key: "QuanLyUser", label: "Quản lý user", icon: require("../../image/ic_user.png"), path: "/admin/users" },
-  { key: "QuanLyThietBi", label: "Quản lý thiết bị", icon: require("../../image/ic_threshold.png"), path: "/admin/devices" },
-  { key: "YCHT", label: "Yêu cầu hỗ trợ", icon: require("../../image/ic_ycht.png"), path: "/admin/require" },//thiếu
-  { key: "ThongBao", label: "Quản lý thông báo", icon: require("../../image/ic_thongbao.png"), path: "/admin/notification" },//thiếu
-  { key: "CaiDat", label: "Cài đặt", icon: require("../../image/CaiDat.png"), path: "/admin/settings" },//thiếu
+  {
+    key: "Overview",
+    label: "Overview",
+    icon: require("../../image/overview.png"),
+    path: "/admin/overview",
+  },
+  {
+    key: "QuanLyUser",
+    label: "Quản lý user",
+    icon: require("../../image/ic_user.png"),
+    path: "/admin/users",
+  },
+  {
+    key: "QuanLyThietBi",
+    label: "Quản lý thiết bị",
+    icon: require("../../image/ic_threshold.png"),
+    path: "/admin/devices",
+  },
+  {
+    key: "YCHT",
+    label: "Yêu cầu hỗ trợ",
+    icon: require("../../image/ic_ycht.png"),
+    path: "/admin/request",
+  },
+  {
+    key: "ThongBao",
+    label: "Quản lý thông báo",
+    icon: require("../../image/ic_thongbao.png"),
+    path: "/admin/notification",
+  }, 
+  {
+    key: "CaiDat",
+    label: "Cài đặt",
+    icon: require("../../image/CaiDat.png"),
+    path: "/admin/setting",
+  }, 
 ];
 
 const HIGHLIGHT_H = 44;
 const TRANS_DUR = 300;
 
-const Sidebar = () => {
+const SidebarAdmin = () => {
   const { theme } = useTheme();
   const location = useLocation();
   const navRef = useRef(null);
@@ -52,14 +82,16 @@ const Sidebar = () => {
     <div className="fixed left-[-10px] top-0 h-screen w-[250px] flex items-start justify-start p-7 z-30">
       <div className="relative">
         <aside
-          className={`w-[216px] h-[755px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
+          className={`w-[216px] h-[700px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
           ${theme === "light" ? "bg-white text-black" : "bg-zinc-900 text-zinc-200"}`}
         >
           {/* Logo */}
           <div className="absolute left-[63px] top-[36px]">
             <h1 className="font-['Inter'] font-semibold text-[32px] text-black dark:text-white">
               <span>Air</span>
-              <span className="italic text-[#969696] dark:text-zinc-400">Zen</span>
+              <span className="italic text-[#969696] dark:text-zinc-400">
+                Zen
+              </span>
             </h1>
           </div>
 
@@ -90,7 +122,9 @@ const Sidebar = () => {
                 to={item.path}
                 className={({ isActive }) =>
                   `flex items-center gap-3 relative z-10 select-none transition-all duration-200 ${
-                    isActive ? "text-emerald-700 dark:text-emerald-200" : "text-gray-500"
+                    isActive
+                      ? "text-emerald-700 dark:text-emerald-200"
+                      : "text-gray-500"
                   }`
                 }
                 style={{ padding: "8px 4px", minHeight: `${HIGHLIGHT_H}px` }}
@@ -102,18 +136,10 @@ const Sidebar = () => {
               </NavLink>
             ))}
           </nav>
-
-          {/* Logout */}
-          <button className="absolute bottom-[27px] left-[63px] flex items-center gap-1">
-            <img src={require("../../image/Logout.png")} alt="Logout" className="w-5 h-5" />
-            <span className="font-['Inter'] text-[16px] text-[#969696] dark:text-zinc-400 ml-1">
-              Log Out
-            </span>
-          </button>
         </aside>
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export default SidebarAdmin;
