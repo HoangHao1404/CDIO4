@@ -101,14 +101,6 @@ const Sidebar = () => {
               </NavLink>
             ))}
           </nav>
-
-          {/* Logout
-          <button className="absolute bottom-[27px] left-[63px] flex items-center gap-1">
-            <img src={require("../../image/Logout.png")} alt="Logout" className="w-5 h-5" />
-            <span className="font-['Inter'] text-[16px] text-[#969696] dark:text-zinc-400 ml-1">
-              Log Out
-            </span>
-          </button> */}
         </aside>
       </div>
     </div>

@@ -106,12 +106,12 @@ export const AuthProvider = ({ children }) => {
         const { token, data } = res.data;
         const userData = data.user;
 
-        // 🧠 Nếu backend trả về "role": ["Admin"], ta lấy phần tử đầu tiên
+        // Nếu backend trả về "role": ["Admin"], ta lấy phần tử đầu tiên
         const role = Array.isArray(userData.role)
           ? userData.role[0]
           : userData.role || "User";
 
-        // ✅ Đồng bộ vào localStorage
+        // Đồng bộ vào localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify({ ...userData, role }));
 
@@ -123,7 +123,7 @@ export const AuthProvider = ({ children }) => {
         return {
           success: true,
           user: { ...userData, role },
-          redirect: role === "Admin" ? "/admin/users" : "/dashboard",
+          redirect: role === "Admin" ? "/admin/overview" : "/dashboard",
         };
       }
 
