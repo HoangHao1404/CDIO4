@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Pencil, Trash2, Lock, X } from "lucide-react";
 import { taiKhoanAPI } from "../../services/taiKhoanAPI";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function UserTable() {
+  const { theme } = useTheme();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -283,14 +285,22 @@ export default function UserTable() {
           placeholder="Tìm kiếm tên hoặc email"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border px-3 py-2 rounded-md w-full md:max-w-sm bg-gray-100"
+          className={`border px-3 py-2 rounded-md w-full md:max-w-sm transition-colors duration-300 ${
+            theme === "dark"
+              ? "bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"
+              : "bg-gray-100 border-gray-300 text-gray-800"
+          }`}
         />
 
         <div className="flex gap-3 flex-wrap">
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-gray-100"
+            className={`border px-3 py-2 rounded-md transition-colors duration-300 ${
+              theme === "dark"
+                ? "bg-zinc-800 border-zinc-700 text-zinc-100"
+                : "bg-gray-100 border-gray-300 text-gray-800"
+            }`}
           >
             <option value="all">Tất cả vai trò</option>
             <option value="Admin">Admin</option>
@@ -301,7 +311,11 @@ export default function UserTable() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-gray-100"
+            className={`border px-3 py-2 rounded-md transition-colors duration-300 ${
+              theme === "dark"
+                ? "bg-zinc-800 border-zinc-700 text-zinc-100"
+                : "bg-gray-100 border-gray-300 text-gray-800"
+            }`}
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="active">Active</option>
@@ -311,7 +325,7 @@ export default function UserTable() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
           >
             + Thêm User
           </button>
@@ -319,9 +333,17 @@ export default function UserTable() {
       </div>
 
       {/* Table section */}
-      <div className="overflow-x-auto border rounded-lg">
+      <div className={`overflow-x-auto border rounded-lg transition-colors duration-300 ${
+          theme === "dark"
+            ? "bg-zinc-900 border-zinc-700 text-zinc-100"
+            : "bg-white border-gray-200 text-gray-800"
+        }`}>
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-100">
+          <thead className={`transition-colors ${
+                theme === "dark"
+                  ? "bg-zinc-800 text-zinc-300"
+                  : "bg-gray-100 text-gray-700"
+              }`}>
             <tr>
               <th className="p-3">ID</th>
               <th className="p-3">Tên</th>
