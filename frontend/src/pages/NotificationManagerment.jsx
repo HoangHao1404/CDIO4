@@ -15,7 +15,6 @@ const NotificationPage = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
-  // Dữ liệu mẫu
   const notifications = [
     {
       id: "NTF-001",
@@ -57,7 +56,6 @@ const NotificationPage = () => {
     draft: { label: "Bản nháp", color: "bg-gray-200 text-gray-700" },
   };
 
-  // Lọc kết quả
   const filtered = notifications.filter(
     (n) =>
       (filter === "all" || n.status === filter) &&
@@ -66,14 +64,13 @@ const NotificationPage = () => {
   );
 
   return (
-    <div className="space-y-8 p-4 md:p-6 bg-white-50 dark:bg-zinc-950 min-h-screen">
-
+    <div className="space-y-8 p-4 md:p-6 bg-white-50 dark:bg-zinc-950 min-h-screen rounded-[25px]">
       {/* Bộ lọc + Nút tạo thông báo */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* Search + Filter */}
         <div className="flex flex-col md:flex-row md:items-center gap-4 w-full">
           {/* Ô tìm kiếm */}
-          <div className="flex items-center w-full md:w-80 bg-white dark:bg-zinc-900 px-4 py-2 rounded-lg shadow border border-gray-100 dark:border-zinc-800">
+          <div className="flex items-center w-full md:w-80 bg-white dark:bg-zinc-900 px-4 py-2 rounded-[14px] shadow border border-gray-100 dark:border-zinc-800">
             <Search size={18} className="text-gray-400" />
             <input
               type="text"
@@ -90,7 +87,7 @@ const NotificationPage = () => {
               <button
                 key={s}
                 onClick={() => setFilter(s)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium border transition ${
+                className={`px-3 py-2 rounded-[14px] text-sm font-medium border transition ${
                   filter === s
                     ? "bg-emerald-500 text-white border-emerald-500"
                     : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800"
@@ -120,22 +117,22 @@ const NotificationPage = () => {
 
       {/* Thống kê nhanh */}
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <Bell className="text-emerald-500 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Tổng thông báo</p>
           <p className="text-2xl font-semibold">32</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <Send className="text-green-500 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Đã gửi</p>
           <p className="text-2xl font-semibold">18</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <Clock className="text-blue-500 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Hẹn giờ</p>
           <p className="text-2xl font-semibold">8</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <XCircle className="text-gray-400 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Bản nháp</p>
           <p className="text-2xl font-semibold">6</p>
@@ -143,7 +140,7 @@ const NotificationPage = () => {
       </div>
 
       {/* Danh sách */}
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-5 overflow-x-auto">
+      <div className="bg-white dark:bg-zinc-900 rounded-[25px] shadow p-5 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="text-gray-600 dark:text-zinc-300 text-sm border-b dark:border-zinc-700">
@@ -178,9 +175,7 @@ const NotificationPage = () => {
                   <td className="py-3 px-4 text-gray-500 text-sm">{n.date}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        statusMap[n.status].color
-                      }`}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${statusMap[n.status].color}`}
                     >
                       {statusMap[n.status].label}
                     </span>

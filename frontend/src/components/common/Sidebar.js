@@ -51,12 +51,13 @@ const Sidebar = () => {
     <div className="fixed left-[-10px] top-0 h-screen w-[250px] flex items-start justify-start p-7 z-30">
       <div className="relative">
         <aside
-          className={`w-[216px] h-[700px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300
-          ${theme === "light" ? "bg-white text-black" : "bg-zinc-900 text-zinc-200"}`}
+          className={`w-[216px] h-[700px] rounded-[25px] shadow relative flex flex-col transition-colors duration-300 
+            bg-white dark:bg-zinc-900 
+            text-black dark:text-zinc-100`}
         >
           {/* Logo */}
           <div className="absolute left-[63px] top-[36px]">
-            <h1 className="font-['Inter'] font-semibold text-[32px] text-black dark:text-white">
+            <h1 className="font-['Inter'] font-semibold text-[32px] text-black dark:text-white transition-colors">
               <span>Air</span>
               <span className="italic text-[#969696] dark:text-zinc-400">Zen</span>
             </h1>
@@ -65,7 +66,7 @@ const Sidebar = () => {
           {/* Highlight */}
           {highlightTop !== undefined && (
             <div
-              className={`absolute left-[13px] w-[189px] h-[44px] rounded-[14px]
+              className={`absolute left-[13px] w-[189px] h-[44px] rounded-[14px] transition-colors duration-300
                 ${theme === "light" ? "bg-[#ccf067]" : "bg-emerald-500/25"}`}
               style={{
                 top: `${highlightTop}px`,
@@ -88,13 +89,17 @@ const Sidebar = () => {
                 key={item.key}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 relative z-10 select-none transition-all duration-200 ${
-                    isActive ? "text-emerald-700 dark:text-emerald-200" : "text-gray-500"
-                  }`
+                  `flex items-center gap-3 relative z-10 select-none transition-all duration-200 
+                   text-gray-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-300
+                   ${isActive ? "text-emerald-700 dark:text-emerald-200" : ""}`
                 }
                 style={{ padding: "8px 4px", minHeight: `${HIGHLIGHT_H}px` }}
               >
-                <img src={item.icon} alt={item.label} className="w-5 h-5" />
+                <img
+                  src={item.icon}
+                  alt={item.label}
+                  className="w-5 h-5 filter dark:invert transition-all duration-200"
+                />
                 <span className="font-['Inter'] text-[16px] leading-[20px]">
                   {item.label}
                 </span>
