@@ -95,7 +95,9 @@ function xAxisPropsByRange(range) {
 function Select({ value, onChange, options }) {
   return (
     <select
-      className="h-9 rounded-xl border border-slate-200 bg-white/90 px-3 text-sm shadow-sm outline-none transition hover:bg-white focus:border-slate-300 dark:bg-slate-800/70 dark:border-slate-700 dark:text-slate-200"
+      className="h-9 rounded-xl border border-slate-200 bg-white/90 px-3 text-sm shadow-sm outline-none 
+                 transition hover:bg-white focus:border-slate-300 
+                 dark:bg-zinc-800/80 dark:border-zinc-700 dark:text-zinc-200"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
@@ -151,12 +153,12 @@ function genData(metricKey, range) {
 function StatusBadge({ metric, currentValue }) {
   const ok = metric.healthy(currentValue);
   const color = ok
-    ? "bg-green-500/15 text-green-600"
-    : "bg-orange-500/15 text-orange-600";
+    ? "bg-green-500/20 text-green-600 dark:bg-green-400/25 dark:text-green-300"
+    : "bg-red-500/20 text-red-600 dark:bg-red-400/25 dark:text-red-300";
   const text = ok ? "Lành mạnh" : "Không lành mạnh";
   return (
     <div
-      className={`inline-flex items-center gap-3 rounded-full px-3 py-2 ${color} shadow-sm backdrop-blur`}
+      className={`inline-flex items-center gap-3 rounded-full px-3 py-2 ${color} shadow-sm backdrop-blur transition-colors`}
     >
       <span className="text-sm font-semibold">
         {currentValue} {metric.unit}
@@ -173,7 +175,7 @@ function DotTooltip({ active, payload }) {
   if (!active || !payload || !payload.length) return null;
   const v = payload[0].value;
   return (
-    <div className="rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow">
+    <div className="rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow dark:bg-indigo-500">
       {v}
     </div>
   );
@@ -196,7 +198,9 @@ export default function AirQualityIndexPage() {
   return (
     <div className="h-full w-full flex flex-col gap-3 px-0 transition-colors duration-300">
       {/* Card biểu đồ */}
-      <div className="relative flex-1 min-h-[420px] rounded-3xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur transition-colors duration-300 dark:border-zinc-700 dark:bg-zinc-800/50 lg:p-6 overflow-hidden">
+      <div className="relative flex-1 min-h-[420px] rounded-3xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur 
+                      transition-colors duration-300 
+                      dark:border-zinc-700 dark:bg-[#1e1e1f] lg:p-6 overflow-hidden">
         {/* Controls */}
         <div className="absolute inset-x-4 top-2 z-10 flex items-start justify-between pointer-events-none">
           <div className="pointer-events-auto">
@@ -231,14 +235,28 @@ export default function AirQualityIndexPage() {
         <div className="h-[400px] w-full pt-16">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data} margin={{ top: 8, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" tick={{ fontSize: 12 }} tickMargin={8} {...xProps} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#e5e7eb"
+                className="dark:stroke-zinc-600/50"
+              />
+              <XAxis
+                dataKey="label"
+                tick={{ fontSize: 12, fill: "#4b5563" }}
+                tickMargin={8}
+                {...xProps}
+                axisLine={{ stroke: "#9ca3af" }}
+                tickLine={{ stroke: "#9ca3af" }}
+              />
               <YAxis
                 domain={getYDomain(metricKey)}
                 ticks={genYTicks(metricKey)}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "#4b5563" }}
                 tickFormatter={(v) => `${v} ${unit}`}
                 width={70}
+                axisLine={{ stroke: "#9ca3af" }}
+                tickLine={{ stroke: "#9ca3af" }}
               />
               <ReferenceLine
                 y={metric.baseline}
@@ -268,7 +286,9 @@ export default function AirQualityIndexPage() {
       </div>
 
       {/* Footer WHO */}
-      <div className="shrink-0 rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm text-slate-600 shadow-sm backdrop-blur transition-colors duration-300 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300">
+      <div className="shrink-0 rounded-2xl border border-slate-200 bg-white/70 px-4 py-3 text-sm text-slate-600 shadow-sm backdrop-blur 
+                      transition-colors duration-300 
+                      dark:border-zinc-700 dark:bg-[#1e1e1f] dark:text-zinc-400">
         <span className="inline-flex items-center gap-2">
           <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs dark:border-zinc-600">
             ℹ️
