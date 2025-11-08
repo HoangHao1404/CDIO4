@@ -1,0 +1,154 @@
+{
+  "BaoCao": [
+    {
+      "_id": "BC001",
+      "TenBaoCao": "Báo cáo chất lượng không khí ngày 01/09",
+      "ID_CamBien": "CB001",
+      "NoiDung": "Nồng độ CO2 trung bình: 450 ppm",
+      "NgayBaoCao": {
+        "$date": "2025-09-01T23:59:00.000Z"
+      }
+    }
+  ],
+  "CamBien": [
+    {
+      "_id": "CB001",
+      "ID_LoaiCamBien": "LCB001",
+      "ID_ThietBi": "TB001",
+      "TrangThai": "active",
+      "NgayUpdate": {
+        "$date": "2025-09-01T11:20:00.000Z"
+      }
+    }
+  ],
+  "CauHinhNguongAnToan": [
+    {
+      "_id": "CH001",
+      "ID_KhachHang": "KH001",
+      "ID_LoaiCamBien": "LCB001",
+      "GiaTriMin": 300,
+      "GiaTriMax": 1000,
+      "ThoiGian": {
+        "$date": "2025-09-01T11:35:00.000Z"
+      }
+    }
+  ],
+  "KhachHang": [
+    {
+      "_id": "KH001",
+      "HoTen": "Nguyen Van A",
+      "SDT": "0901234567",
+      "Email": "a@gmail.com"
+    }
+  ],
+  "LichSuDuLieu": [
+    {
+      "ThoiGian": {
+        "$date": "2025-09-01T11:30:00.000Z"
+      },
+      "ID_CamBien": "CB001",
+      "_id": "DL001",
+      "GiaTri": 412.5
+    }
+  ],
+  "LoaiCamBien": [
+    {
+      "_id": "LCB001",
+      "TenLoai": "CO2",
+      "DonVi": "ppm",
+      "MoTa": "Cảm biến đo nồng độ CO2",
+      "ID_NhaSanXuat": "NSX001"
+    }
+  ],
+  "NhaSanXuat": [
+    {
+      "_id": "NSX001",
+      "Email": "support@iotdevices.com",
+      "DiaChi": "123 Phan Chu Trinh, Hà Nội",
+      "SDT": "0241234567",
+      "TenNhaSX": "IoT Device Corp"
+    }
+  ],
+  "SuCo": [
+    {
+      "_id": "SC001",
+      "ID_TaiKhoan": "TK001",
+      "ID_ThietBi": "TB001",
+      "ID_CamBien": "CB001",
+      "TieuDe": "Cảnh báo CO2 cao",
+      "MoTa": "Nồng độ CO2 vượt ngưỡng an toàn",
+      "TrangThai": "open",
+      "MucDo": "critical",
+      "ThoiGianTao": {
+        "$date": "2025-09-01T11:10:00.000Z"
+      },
+      "ThoiGianCapNhat": {
+        "$date": "2025-09-01T11:10:00.000Z"
+      }
+    }
+  ],
+  "TaiKhoan": [
+    {
+      "_id": "TK001",
+      "TenDangNhap": "nguyenvana",
+      "MatKhau": "hashed_pw",
+      "TrangThai": "active",
+      "NgayTao": {
+        "$date": "2025-09-01T10:10:00.000Z"
+      },
+      "ID_KhachHang": "KH001",
+      "ID_VaiTro": "VT001"
+    }
+  ],
+  "TaiKhoan_ThietBi": [
+    {
+      "_id": "TKTB001",
+      "ID_TaiKhoan": "TK001",
+      "ID_ThietBi": "TB001",
+      "VaiTroTrenTB": "owner"
+    }
+  ],
+  "ThietBi": [
+    {
+      "_id": "TB001",
+      "TenThietBi": "Bộ đo chất lượng không khí",
+      "ID_NhaSanXuat": "NSX001",
+      "NgayNhap": {
+        "$date": "2025-09-01T09:00:00.000Z"
+      }
+    }
+  ],
+  "ThongBao": [
+    {
+      "_id": "TB001",
+      "ID_TaiKhoan": "TK001",
+      "NoiDung": "Tài khoản đã đăng nhập thành công",
+      "ThoiGian": {
+        "$date": "2025-09-01T11:15:00.000Z"
+      },
+      "TrangThai": "unread"
+    }
+  ],
+  "VaiTro": [
+    {
+      "_id": "VT001",
+      "TenVaiTro": "Admin",
+      "MoTa": "Quản trị hệ thống",
+      "QuyenHan": "all",
+      "NgayTao": {
+        "$date": "2025-09-01T10:00:00.000Z"
+      }
+    }
+  ],
+  "YeuCau_HoTro": [
+    {
+      "_id": "YC001",
+      "NoiDung": "Không đăng nhập được",
+      "TrangThai": "open",
+      "ID_KhachHang": "KH001",
+      "ThoiGian": {
+        "$date": "2025-09-01T11:00:00.000Z"
+      }
+    }
+  ]
+}

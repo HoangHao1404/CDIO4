@@ -75,6 +75,7 @@ export default function UserTable() {
     locked: "bg-yellow-400",
   };
 
+  // Handle khi nhấn thêm user
   const handleAddUser = (e) => {
     e.preventDefault();
     setIsModalOpen(false);
@@ -168,6 +169,7 @@ export default function UserTable() {
     }
   };
 
+  // Handle delete user
   const handleDelete = async (id) => {
     setDeleteLoading(true);
     setDeleteError("");
@@ -175,7 +177,6 @@ export default function UserTable() {
       const res = await taiKhoanAPI.remove(id);
       if (res.ok) {
         setRows((prev) => prev.filter((user) => user.id !== id));
-        // Hiện toast thành công nếu có
       }
       setConfirmId(null);
     } catch (error) {
@@ -185,7 +186,7 @@ export default function UserTable() {
     }
   };
 
-  // Xử lý đổi trạng thái
+  // Handle change status of user (lock/unlock)
   const handleUpdateStatus = async (id, status) => {
     setLockLoading(true);
     setLockError("");
@@ -202,7 +203,6 @@ export default function UserTable() {
         )
       );
       setLockId(null);
-      // Hiện toast thành công nếu có
     } catch (error) {
       setLockError(error.message);
     } finally {
@@ -210,7 +210,7 @@ export default function UserTable() {
     }
   };
 
-  // Khi bấm nút Sửa
+  // Khi nhấn vào nút Sửa
   const handleEditClick = (user) => {
     setEditId(user.id);
     setEditData({
@@ -234,20 +234,34 @@ export default function UserTable() {
   // Xử lý submit form sửa
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    // Validate
+
+    // Kiểm tra dữ liệu trước khi gửi đi
     if (!editData.HoTen.trim()) {
       setEditError("Họ tên không được để trống");
       return;
     }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(editData.Email)) {
       setEditError("Email không đúng định dạng");
       return;
     }
+
     setEditLoading(true);
-    setEditError("");
+    setEditError(""); // Reset lỗi
+
     try {
+      // Gửi yêu cầu cập nhật thông tin người dùng
       const updatedUser = await taiKhoanAPI.update(editId, editData);
+      
+      // Kiểm tra lỗi từ API trả về
+      if (!updatedUser || !updatedUser.id) {
+        throw new Error("Không thể cập nhật thông tin tài khoản");
+      }
+
+      console.log("Dữ liệu trả về từ API:", updatedUser);
+
+      // Cập nhật lại danh sách user sau khi sửa
       setRows((prev) =>
         prev.map((user) =>
           user.id === editId
@@ -255,23 +269,27 @@ export default function UserTable() {
                 ...user,
                 name: updatedUser.HoTen,
                 email: updatedUser.Email,
-                role: Array.isArray(updatedUser.VaiTro)
-                  ? updatedUser.VaiTro[0]
-                  : updatedUser.VaiTro,
+                role: updatedUser.VaiTro,
                 status: updatedUser.TrangThai,
               }
             : user
         )
       );
+
+      // Đóng modal và reset trạng thái
       setEditId(null);
       setEditData(null);
-      // Hiện toast thành công nếu có
+
+      // Thông báo thành công
+      console.log("✅ Cập nhật user thành công:", updatedUser);
     } catch (error) {
-      setEditError(error.message);
+      setEditError(error.message || "Có lỗi khi sửa thông tin người dùng");
+      console.error("❌ Lỗi khi sửa user:", error);
     } finally {
       setEditLoading(false);
     }
   };
+
 
   if (loading) return <div className="p-4">⏳ Đang tải dữ liệu...</div>;
   if (error) return <div className="p-4 text-red-500">❌ {error}</div>;
@@ -333,17 +351,21 @@ export default function UserTable() {
       </div>
 
       {/* Table section */}
-      <div className={`overflow-x-auto border rounded-lg transition-colors duration-300 ${
+      <div
+        className={`overflow-x-auto border rounded-lg transition-colors duration-300 ${
           theme === "dark"
             ? "bg-zinc-900 border-zinc-700 text-zinc-100"
             : "bg-white border-gray-200 text-gray-800"
-        }`}>
+        }`}
+      >
         <table className="min-w-full text-sm text-left">
-          <thead className={`transition-colors ${
-                theme === "dark"
-                  ? "bg-zinc-800 text-zinc-300"
-                  : "bg-gray-100 text-gray-700"
-              }`}>
+          <thead
+            className={`transition-colors ${
+              theme === "dark"
+                ? "bg-zinc-800 text-zinc-300"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
             <tr>
               <th className="p-3">ID</th>
               <th className="p-3">Tên</th>

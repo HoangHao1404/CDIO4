@@ -1,0 +1,9 @@
+tranduytan4_db_user
+6vsP2buY3luhZksc
+
+Connection string: Khoá truy cập
+mongodb+srv://tranduytan4_db_user:<db_password>@cdio4-mongodb.irqwvoa.mongodb.net/?retryWrites=true&w=majority&appName=CDIO4-MongoDB
+
+
+airzen123
+airzen123

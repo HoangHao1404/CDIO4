@@ -1,0 +1,10 @@
+[{
+  "_id": "CH001",
+  "ID_KhachHang": "KH001",
+  "ID_LoaiCamBien": "LCB001",
+  "GiaTriMin": 300,
+  "GiaTriMax": 1000,
+  "ThoiGian": {
+    "$date": "2025-09-01T11:35:00.000Z"
+  }
+}]

@@ -1,0 +1,11 @@
+[{
+  "_id": "TK001",
+  "TenDangNhap": "nguyenvana",
+  "MatKhau": "hashed_pw",
+  "TrangThai": "active",
+  "NgayTao": {
+    "$date": "2025-09-01T10:10:00.000Z"
+  },
+  "ID_KhachHang": "KH001",
+  "ID_VaiTro": "VT001"
+}]
