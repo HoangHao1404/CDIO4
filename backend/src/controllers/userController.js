@@ -195,6 +195,8 @@ export const updateUser = async (req, res, next) => {
       console.log(`✅ User updated: ${updatedUser.email}`);
     }
 
+    // Log kết quả trả về
+    console.log("Update result:", updatedUser);
     res.status(200).json({
       success: true,
       message: "User updated successfully",
