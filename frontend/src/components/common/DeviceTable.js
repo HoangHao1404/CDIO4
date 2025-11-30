@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { deviceAPI } from "../../services/deviceAPI";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function DeviceTable() {
+  const { theme } = useTheme();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +31,7 @@ export default function DeviceTable() {
   const [newDevice, setNewDevice] = useState({
     TenThietBi: "",
     ThongSoKyThuat: "",
-    TrangThai: "offline"
+    TrangThai: "offline",
   });
 
   // Xử lý thay đổi input trong form
@@ -37,7 +39,7 @@ export default function DeviceTable() {
     const { name, value } = e.target;
     setNewDevice((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -101,13 +103,13 @@ export default function DeviceTable() {
   // CẬP NHẬT HÀM XỬ LÝ THÊM THIẾT BỊ
   const handleAddDevice = async (e) => {
     e.preventDefault();
-    
+
     // Validation cơ bản
     if (!newDevice.TenThietBi.trim()) {
       setAddError("Tên thiết bị không được để trống");
       return;
     }
-    
+
     if (!newDevice.ThongSoKyThuat) {
       setAddError("Vui lòng chọn thông số kỹ thuật");
       return;
@@ -121,7 +123,7 @@ export default function DeviceTable() {
       const createdDevice = await deviceAPI.create({
         TenThietBi: newDevice.TenThietBi,
         ThongSoKyThuat: newDevice.ThongSoKyThuat,
-        TrangThai: newDevice.TrangThai
+        TrangThai: newDevice.TrangThai,
       });
 
       // Thêm thiết bị mới vào đầu danh sách
@@ -131,12 +133,11 @@ export default function DeviceTable() {
       setNewDevice({
         TenThietBi: "",
         ThongSoKyThuat: "",
-        TrangThai: "offline"
+        TrangThai: "offline",
       });
       setIsModalOpen(false);
-      
+
       console.log("✅ Thêm thiết bị thành công");
-      
     } catch (err) {
       setAddError(err.message || "Không thể tạo thiết bị mới");
       console.error("❌ Lỗi khi tạo thiết bị:", err);
@@ -154,14 +155,22 @@ export default function DeviceTable() {
           placeholder="Tìm kiếm bằng tên thiết bị"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border px-3 py-2 rounded-md w-full md:max-w-sm bg-gray-100"
+          className={`border px-3 py-2 rounded-md w-full md:max-w-sm transition-colors duration-300 ${
+            theme === "dark"
+              ? "bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"
+              : "bg-gray-100 border-gray-300 text-gray-800"
+          }`}
         />
 
         <div className="flex gap-3 flex-wrap">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border px-3 py-2 rounded-md bg-gray-100"
+            className={`border px-3 py-2 rounded-md transition-colors duration-300 ${
+              theme === "dark"
+                ? "bg-zinc-800 border-zinc-700 text-zinc-100"
+                : "bg-gray-100 border-gray-300 text-gray-800"
+            }`}
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="online">Online</option>
@@ -170,7 +179,7 @@ export default function DeviceTable() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
           >
             + Thêm thiết bị
           </button>
@@ -178,7 +187,13 @@ export default function DeviceTable() {
       </div>
 
       {/* Table section với loading states */}
-      <div className="overflow-x-auto border rounded-lg">
+      <div
+        className={`overflow-x-auto border rounded-lg transition-colors duration-300 ${
+          theme === "dark"
+            ? "bg-zinc-900 border-zinc-700 text-zinc-100"
+            : "bg-white border-gray-200 text-gray-800"
+        }`}
+      >
         {loading ? (
           <div className="p-8 text-center">
             <div className="inline-block w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
@@ -195,7 +210,13 @@ export default function DeviceTable() {
           </div>
         ) : (
           <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-100">
+            <thead
+              className={`transition-colors ${
+                theme === "dark"
+                  ? "bg-zinc-800 text-zinc-300"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+            >
               <tr>
                 <th className="p-3 italic">ID</th>
                 <th className="p-3">Tên Thiết Bị</th>
@@ -208,7 +229,14 @@ export default function DeviceTable() {
               {rows.map((device) => {
                 const status = getDeviceStatus(device);
                 return (
-                  <tr key={device._id} className="border-t">
+                  <tr
+                    key={device._id}
+                    className={`border-t transition-colors ${
+                      theme === "dark"
+                        ? "border-zinc-800 hover:bg-zinc-800"
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
                     <td className="p-3 italic">{device._id}</td>
                     <td className="p-3 font-medium">{device.TenThietBi}</td>
                     <td className="p-3">{getDeviceSpec(device)}</td>
@@ -247,8 +275,12 @@ export default function DeviceTable() {
             <button
               key={i + 1}
               onClick={() => setPage(i + 1)}
-              className={`px-3 py-1 rounded ${
-                page === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+              className={`px-3 py-1 rounded transition-colors ${
+                page === i + 1
+                  ? "bg-blue-500 text-white"
+                  : theme === "dark"
+                  ? "bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
               }`}
             >
               {i + 1}
@@ -260,7 +292,13 @@ export default function DeviceTable() {
       {/* Modal thêm thiết bị */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div
+            className={`rounded-lg p-6 w-full max-w-md transition-colors duration-300 ${
+              theme === "dark"
+                ? "bg-zinc-900 text-zinc-100 border border-zinc-700"
+                : "bg-white text-gray-900"
+            }`}
+          >
             <h2 className="text-xl font-semibold mb-4">Thêm Thiết Bị</h2>
 
             <form onSubmit={handleAddDevice} className="space-y-4">
@@ -281,8 +319,12 @@ export default function DeviceTable() {
                   name="TenThietBi"
                   value={newDevice.TenThietBi}
                   onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Ví dụ: Máy đo khí Gas để cháy"
+                  className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+                    theme === "dark"
+                      ? "bg-zinc-800 border-zinc-700 text-zinc-100"
+                      : "bg-white border-gray-300 text-gray-800"
+                  }`}
+                  placeholder="Ví dụ: Máy đo khí Gas"
                   required
                 />
               </div>
@@ -296,7 +338,11 @@ export default function DeviceTable() {
                   name="ThongSoKyThuat"
                   value={newDevice.ThongSoKyThuat}
                   onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${
+                    theme === "dark"
+                      ? "bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"
+                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
+                  }`}
                   required
                 >
                   <option value="">-- Chọn thông số kỹ thuật --</option>
@@ -317,7 +363,11 @@ export default function DeviceTable() {
                   name="TrangThai"
                   value={newDevice.TrangThai}
                   onChange={handleInputChange}
-                  className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${
+                    theme === "dark"
+                      ? "bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"
+                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
+                  }`}
                 >
                   <option value="online">Online</option>
                   <option value="offline">Offline</option>
@@ -335,11 +385,15 @@ export default function DeviceTable() {
                     setNewDevice({
                       TenThietBi: "",
                       ThongSoKyThuat: "",
-                      TrangThai: "offline"
+                      TrangThai: "offline",
                     });
                     setAddError("");
                   }}
-                  className="px-4 py-2 border rounded-md hover:bg-gray-100"
+                  className={`px-4 py-2 border rounded-md transition-colors ${
+                    theme === "dark"
+                      ? "border-zinc-600 text-zinc-300 hover:bg-zinc-800"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                  }`}
                   disabled={addLoading}
                 >
                   Hủy
@@ -366,5 +420,3 @@ export default function DeviceTable() {
     </div>
   );
 }
-
-

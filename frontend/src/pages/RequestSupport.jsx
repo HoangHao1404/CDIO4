@@ -5,12 +5,10 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  RefreshCcw,
   Eye,
 } from "lucide-react";
 
 const RequestPage = () => {
-  // Dữ liệu mẫu
   const requests = [
     {
       id: "REQ-101",
@@ -49,7 +47,6 @@ const RequestPage = () => {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  // Lọc danh sách
   const filtered = requests.filter(
     (r) =>
       (filter === "all" || r.status === filter) &&
@@ -57,7 +54,6 @@ const RequestPage = () => {
         r.subject.toLowerCase().includes(search.toLowerCase()))
   );
 
-  // Màu nhãn trạng thái
   const statusMap = {
     pending: { label: "Chờ xử lý", color: "bg-yellow-100 text-yellow-800" },
     processing: { label: "Đang xử lý", color: "bg-blue-100 text-blue-800" },
@@ -66,12 +62,11 @@ const RequestPage = () => {
   };
 
   return (
-    <div className="space-y-8 p-4 md:p-6 bg-white-50 dark:bg-zinc-950 min-h-screen">
-
+    <div className="space-y-8 p-4 md:p-6 bg-white-50 dark:bg-zinc-950 min-h-screen rounded-[25px]">
       {/* Thanh tìm kiếm + Filter */}
       <div className="flex flex-col md:flex-row md:items-center gap-4">
         {/* Search box */}
-        <div className="flex items-center w-full md:w-1/2 bg-white dark:bg-zinc-900 px-4 py-2 rounded-lg shadow border border-gray-100 dark:border-zinc-800">
+        <div className="flex items-center w-full md:w-1/2 bg-white dark:bg-zinc-900 px-4 py-2 rounded-[14px] shadow border border-gray-100 dark:border-zinc-800">
           <Search size={18} className="text-gray-400" />
           <input
             type="text"
@@ -88,7 +83,7 @@ const RequestPage = () => {
             <button
               key={s}
               onClick={() => setFilter(s)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium border transition ${
+              className={`px-3 py-2 rounded-[14px] text-sm font-medium border transition ${
                 filter === s
                   ? "bg-emerald-500 text-white border-emerald-500"
                   : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800"
@@ -110,22 +105,22 @@ const RequestPage = () => {
 
       {/* Thống kê nhanh */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <MessageSquare className="text-emerald-500 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Tổng yêu cầu</p>
           <p className="text-2xl font-semibold">24</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <Clock className="text-yellow-500 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Đang chờ</p>
           <p className="text-2xl font-semibold">6</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <CheckCircle className="text-green-500 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Hoàn tất</p>
           <p className="text-2xl font-semibold">12</p>
         </div>
-        <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow flex flex-col items-center justify-center">
+        <div className="bg-white dark:bg-zinc-900 rounded-[20px] p-4 shadow flex flex-col items-center justify-center">
           <XCircle className="text-gray-400 mb-2" size={22} />
           <p className="text-gray-500 text-sm">Đã đóng</p>
           <p className="text-2xl font-semibold">6</p>
@@ -133,7 +128,7 @@ const RequestPage = () => {
       </div>
 
       {/* Bảng danh sách */}
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-5 overflow-x-auto">
+      <div className="bg-white dark:bg-zinc-900 rounded-[25px] shadow p-5 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="text-gray-600 dark:text-zinc-300 text-sm border-b dark:border-zinc-700">
@@ -166,9 +161,7 @@ const RequestPage = () => {
                   <td className="py-3 px-4 text-gray-500 text-sm">{req.date}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        statusMap[req.status].color
-                      }`}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${statusMap[req.status].color}`}
                     >
                       {statusMap[req.status].label}
                     </span>

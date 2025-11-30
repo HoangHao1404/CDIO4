@@ -15,7 +15,10 @@ const QualityChart = () => {
   const mainLabel = "Không lành mạnh";
 
   return (
-    <div className="w-full h-[350px] relative flex flex-col justify-center">
+    <div
+      className="w-full h-[350px] relative flex flex-col justify-center items-center
+                 text-gray-800 dark:text-zinc-200 transition-colors duration-300"
+    >
       <ResponsiveContainer>
         <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
           <Pie
@@ -39,23 +42,36 @@ const QualityChart = () => {
       </ResponsiveContainer>
 
       {/* Text hiển thị ở giữa */}
-      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-[180px]">
+      <div
+        className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-[180px]
+                   text-gray-900 dark:text-zinc-100 transition-colors"
+      >
         <div className="text-4xl font-bold">{mainValue}%</div>
         <div className="text-lg mt-[5px]">{mainLabel}</div>
       </div>
 
-      {/* chú thích */}
-      <div className="flex justify-center gap-5">
+      {/* Chú thích */}
+      <div
+        className="flex justify-center gap-5 mt-3 text-sm 
+                   text-gray-700 dark:text-zinc-300 transition-colors"
+      >
         {data.map((entry, index) => (
-          <div key={index} className="flex items-center gap-[5px]">
+          <div key={index} className="flex items-center gap-[6px]">
             <div
-              className="w-[14px] h-[14px] rounded-full"
+              className="w-[14px] h-[14px] rounded-full border border-gray-300 dark:border-zinc-700"
               style={{ backgroundColor: entry.color }}
             />
             <span>{entry.name}</span>
           </div>
         ))}
       </div>
+
+      {/* Nền biểu đồ (vòng ngoài) */}
+      <div
+        className="absolute inset-0 -z-10 rounded-3xl
+                   bg-white/70 dark:bg-[#1c1c1d] shadow-sm border border-transparent dark:border-zinc-700
+                   transition-colors duration-300"
+      ></div>
     </div>
   );
 };

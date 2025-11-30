@@ -22,11 +22,11 @@ import {
 
 const AdminOverview = () => {
   const stats = [
-    { title: "Người dùng", value: 120, icon: <Users size={22} />, color: "#34d399", gradient: "from-emerald-400 to-lime-300" },
-    { title: "Thiết bị", value: 58, icon: <Cpu size={22} />, color: "#60a5fa", gradient: "from-sky-400 to-blue-400" },
-    { title: "Online", value: 46, icon: <Wifi size={22} />, color: "#22c55e", gradient: "from-green-400 to-emerald-500" },
-    { title: "Offline", value: 12, icon: <WifiOff size={22} />, color: "#ef4444", gradient: "from-red-400 to-rose-500" },
-    { title: "Yêu cầu hỗ trợ", value: 8, icon: <MessageSquare size={22} />, color: "#f59e0b", gradient: "from-amber-400 to-orange-400" },
+    { title: "Người dùng", value: 120, icon: <Users size={22} />, gradient: "from-emerald-400 to-lime-300" },
+    { title: "Thiết bị", value: 58, icon: <Cpu size={22} />, gradient: "from-sky-400 to-blue-400" },
+    { title: "Online", value: 46, icon: <Wifi size={22} />, gradient: "from-green-400 to-emerald-500" },
+    { title: "Offline", value: 12, icon: <WifiOff size={22} />, gradient: "from-red-400 to-rose-500" },
+    { title: "Yêu cầu hỗ trợ", value: 8, icon: <MessageSquare size={22} />, gradient: "from-amber-400 to-orange-400" },
   ];
 
   const userStats = [
@@ -51,13 +51,32 @@ const AdminOverview = () => {
   ];
 
   return (
-    <div className="space-y-8 p-4 md:p-6 bg-gradient-to-b from-white-50 to-white dark:from-zinc-900 dark:to-zinc-950 min-h-screen">
+    <div
+      className="
+        min-h-screen w-full p-4 md:p-6
+        rounded-[25px]
+        bg-gradient-to-b from-gray-50 to-white
+        dark:from-[#181818] dark:to-[#121212]
+        shadow-[0_4px_16px_rgba(0,0,0,0.08)]
+        dark:shadow-[0_4px_16px_rgba(255,255,255,0.05)]
+        transition-all duration-500
+        text-gray-800 dark:text-gray-100
+      "
+    >
       {/* Cards thống kê */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
         {stats.map((item, i) => (
           <div
             key={i}
-            className="p-5 bg-white dark:bg-zinc-900 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-emerald-200 dark:hover:border-emerald-600"
+            className="
+              p-5 rounded-2xl
+              bg-white dark:bg-[#242424]
+              border border-transparent
+              shadow-md hover:shadow-lg
+              hover:-translate-y-1
+              transition-all duration-300
+              hover:border-emerald-200 dark:hover:border-emerald-500/40
+            "
           >
             <div
               className={`w-10 h-10 rounded-xl bg-gradient-to-r ${item.gradient} flex items-center justify-center text-white shadow`}
@@ -75,9 +94,9 @@ const AdminOverview = () => {
       </div>
 
       {/* Biểu đồ */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
         {/* Biểu đồ người dùng */}
-        <div className="col-span-2 bg-white dark:bg-zinc-900 rounded-2xl shadow p-5">
+        <div className="col-span-2 bg-white dark:bg-[#242424] rounded-2xl shadow p-5 transition-all duration-300">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
               <Activity size={20} /> Lượng người dùng mới theo tháng
@@ -86,33 +105,36 @@ const AdminOverview = () => {
           </div>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={userStats}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-zinc-600/40" />
               <XAxis dataKey="name" stroke="#9ca3af" />
               <YAxis stroke="#9ca3af" />
-              <Tooltip cursor={{ fill: "rgba(0,0,0,0.05)" }} />
-              <Bar
-                dataKey="newUsers"
-                fill="#34d399"
-                radius={[10, 10, 0, 0]}
-                barSize={40}
+              <Tooltip
+                cursor={{ fill: "rgba(0,0,0,0.05)" }}
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  borderRadius: "8px",
+                  border: "none",
+                  color: "#111",
+                }}
               />
+              <Bar dataKey="newUsers" fill="#34d399" radius={[10, 10, 0, 0]} barSize={40} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Biểu đồ trạng thái thiết bị */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-5">
+        <div className="bg-white dark:bg-[#242424] rounded-2xl shadow p-5 transition-all duration-300">
           <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-200">
             Trạng thái thiết bị
           </h2>
           <ResponsiveContainer width="100%" height={260}>
-            <PieChart>
+            <PieChart margin={{ top: 20, right: 40, bottom: 20, left: 40 }}>
               <Pie
                 data={deviceStatus}
                 cx="50%"
                 cy="50%"
                 outerRadius={90}
-                labelLine={false}
+                labelLine={true}
                 label={({ name, value }) => `${name}: ${value}`}
                 dataKey="value"
               >
@@ -126,7 +148,7 @@ const AdminOverview = () => {
       </div>
 
       {/* Recent activities */}
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-5">
+      <div className="bg-white dark:bg-[#242424] rounded-2xl shadow p-5 mt-8 transition-all duration-300">
         <h2 className="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-200">
           Hoạt động gần đây
         </h2>

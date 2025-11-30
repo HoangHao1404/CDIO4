@@ -1,0 +1,16 @@
+[{
+  "_id": "SC001",
+  "ID_TaiKhoan": "TK001",
+  "ID_ThietBi": "TB001",
+  "ID_CamBien": "CB001",
+  "TieuDe": "Cảnh báo CO2 cao",
+  "MoTa": "Nồng độ CO2 vượt ngưỡng an toàn",
+  "TrangThai": "open",
+  "MucDo": "critical",
+  "ThoiGianTao": {
+    "$date": "2025-09-01T11:10:00.000Z"
+  },
+  "ThoiGianCapNhat": {
+    "$date": "2025-09-01T11:10:00.000Z"
+  }
+}]
